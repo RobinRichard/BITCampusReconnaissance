@@ -12,7 +12,6 @@ import Home from "./screens/HomeScreen";
 import Settings from './screens/SettingsScreen'
 import Campus from './screens/CampusScreen'
 import Gallery from './screens/GalleryScreen'
-import Wizard from './screens/WizardScreen'
 import Login from './screens/LoginScreen'
 
 

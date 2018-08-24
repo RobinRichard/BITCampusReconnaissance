@@ -24,13 +24,13 @@ class Category extends Component {
             const answeredQues = Object.keys(item.questionList.filter(data => data.status == '1')).length
             return (
                 <TouchableOpacity key={item.category} style={styles.imgContainer} onPress={() => Actions.List({ types: item.category, questionList: item.questionList })}>
-                    <View style={{ backgroundColor: item.colour,padding:10 }}>
+                    <View style={{ backgroundColor: item.colour, borderRadius: 5 }}>
                         <View style={styles.TextContainer}>
-                            <View style={{ flex: 1 }}><Icon type="FontAwesome" style={{ fontSize: 25, color: 'white' }} name={item.iconname} /></View>
+                            <View style={{ flex: 1 }}><Icon type="FontAwesome" style={{ fontSize: 28, color: 'white' }} name={item.iconname} /></View>
                             <View style={{ flex: 3, alignItems: 'center' }}><Text style={styles.buttonText} >{item.Name}</Text></View>
                             <View style={{ flex: 1, alignItems: 'flex-end' }}><Text style={styles.buttonText}>{answeredQues} / {totalQues}</Text></View>
                         </View>
-                        <View style={{alignItems: 'center', flexDirection: 'row', justifyContent: 'center',}}>
+                        <View style={{alignItems: 'center', flexDirection: 'row',marginBottom:10, justifyContent: 'center',}}>
                             <View style={{ flex: 4,alignItems: 'center'}}>
                                 <View style={{ width:'80%'}}>
                             {
@@ -51,11 +51,13 @@ class Category extends Component {
             );
         });
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1,backgroundColor:'white' }}>
                 <StatusBar backgroundColor='#00121f' barStyle='light-content' />
                 <View style={{ flex: 1 }}>
-
-
+                <View style={{alignItems: 'center',justifyContent: 'center', padding:10}}>
+                <Text style={{fontSize:20,fontWeight:'bold', color: '#004898'}}>Reconnaissance</Text>
+                    <Text style={{fontSize:16,fontWeight:'bold', color: '#5c5757'}}>Otago Polytechnic</Text>
+                </View>
                     <ScrollView contentContainerStyle={styles.scrollContainer}>
                         <View style={styles.container}>
                             {CategoryList}

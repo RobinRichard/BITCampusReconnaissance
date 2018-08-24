@@ -3,13 +3,11 @@ import {
     View,
     StyleSheet,
     SafeAreaView,
-    TextInput,
     Platform,
-    StatusBar
+    StatusBar,
 } from "react-native";
-import { Card, Button, Text, Avatar } from "react-native-elements";
-import { Container, Content, Header, Icon, Body, Right, Title } from 'native-base';
-
+import { Card, Text, Avatar } from "react-native-elements";
+import {  Icon } from 'native-base';
 class Settings extends Component {
 
     componentWillMount() {
@@ -20,9 +18,11 @@ class Settings extends Component {
     }
 
     render() {
+   
         return (
-            <SafeAreaView style={{ flex: 1,paddingTop:40 }}>
+            <SafeAreaView style={{ flex: 1,backgroundColor:'white' }}>
                  <StatusBar backgroundColor='#00121f' barStyle='light-content' />
+                 
                  <Card style={{ flex: 1 }}  title="Robin Richard Arulanandam">
                 <View style={styles.usercontainer}>
                   <Avatar
@@ -33,7 +33,6 @@ class Settings extends Component {
                     activeOpacity={0.7}
 
                   />
-
                   <View style={{ flexDirection: 'row', margin: 5 }}>
                     <View style={styles.textcontainer} ><Text h4>#1000054229 </Text></View>
                   </View>
@@ -52,6 +51,7 @@ class Settings extends Component {
                 
                 </View>
               </Card>
+              
             </SafeAreaView>
         );
     }

@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Dimensions,
-  Image,
-  ListView,
-  PixelRatio,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Dimensions, Image, ListView,  StyleSheet,  Text,  View} from 'react-native';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
@@ -19,12 +11,18 @@ class Home extends Component {
         rowHasChanged: (r1, r2) => r1 !== r2
       }).cloneWithRows([
         'Otago Polytechnic is proud to be a leader in high quality, career-focused education with some of the best student achievement and satisfaction results in New Zealand.Employers love our graduates because they are work-ready, confident and solution-focused. We believe our people make a better world and our alumni are global citizens who care about making a difference.We have been given the highest possible quality ratings from Government and, as educators, we offer innovative ways for our learners to study so they can build their capability and realise their potential.With online tools, blended delivery options and pathways from foundation through to postgraduate, time, distance and previous learning are no barriers to gaining the education you want. We can even give credit for knowledge gained in your career and now offer a digital micro-credentialing process where learners can be assessed and ‘show what they know’ without undertaking a formal qualification. Collaborations are at the heart of our philosophy for learning and growth and our commitment to sustainability plays a major role in everything we do, influencing both day-to-day operation and our future decision-making. We are also highly active in the field of applied research with our researchers and their students contributing to professional and community networks nationally and internationally.'
-      ])
+      ]),
+      imagesrc:[require('../Images/campus1.jpg'),
+                require('../Images/campus2.jpg'),
+                require('../Images/campus3.jpg'),
+                require('../Images/campus4.jpg'),
+                require('../Images/campus5.jpg')]
     };
   }
 
   render() {
     const { onScroll = () => {} } = this.props;
+   
     return (
       <ListView
         ref="ListView"
@@ -40,7 +38,6 @@ class Home extends Component {
         renderScrollComponent={props => (
           <ParallaxScrollView
             onScroll={onScroll}
-
             headerBackgroundColor="#333"
             stickyHeaderHeight={ STICKY_HEADER_HEIGHT }
             parallaxHeaderHeight={ PARALLAX_HEADER_HEIGHT }
@@ -48,7 +45,7 @@ class Home extends Component {
 
             renderBackground={() => (
               <View key="background">
-                <Image style={{height: window.height,resizeMode: 'cover'}} source={require('../Images/campus.jpg')} />
+                <Image style={{height: window.height,width:window.width}} source={this.state.imagesrc[Math.floor(Math.random() * (4 + 1))]} />
                 <View style={{position: 'absolute',
                               top: 0,
                               width: window.width,
@@ -76,6 +73,7 @@ class Home extends Component {
             )}
 
           />
+          
         )}
       />
     );
@@ -139,12 +137,12 @@ const styles = StyleSheet.create({
   },
   sectionSpeakerText: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 35,
     paddingVertical: 5
   },
   sectionTitleText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 22,
     paddingVertical: 5
   },
   row: {
@@ -152,11 +150,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: '#ccc',
     borderBottomWidth: 1,
-    justifyContent: 'center'
   },
   rowText: {
-    fontSize: 20,
-    color:'black'
+    fontSize: 18,
+    fontWeight:'100',
+    color:'black',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 });
 

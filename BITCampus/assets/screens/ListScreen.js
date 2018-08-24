@@ -24,7 +24,7 @@ class List extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1,backgroundColor:'white' }}>
                 <View style={{ flex: 1 }}>
                     <FlatList
                         data={this.state.questionList}

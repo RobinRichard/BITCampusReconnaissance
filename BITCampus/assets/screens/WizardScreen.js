@@ -27,8 +27,9 @@ export default class App extends React.Component {
             <Wizard.Step key={el.name}>
               {({ onChangeValue, values }) => (
                 <View style={styles.container}>
-                  <Text>{el.title}</Text>
-                   
+                <View style={{ padding:10}}>
+                  <Text style={{fontSize:16,fontWeight:'100', color: '#555151'}}>{el.title}</Text>
+                  </View>
                   {el.type == 'text' ?
                     <Input
                       onChangeValue={onChangeValue}
@@ -56,6 +57,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor:'white'
   },
   container: {
     flex: 1,

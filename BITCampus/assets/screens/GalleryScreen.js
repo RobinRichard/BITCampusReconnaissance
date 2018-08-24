@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, ScrollView, Image, TouchableWithoutFeedback,Sta
 let SCREEN_WIDTH = Dimensions.get('window').width
 let SCREEN_HEIGHT = Dimensions.get('window').height
 var images = [
-    { id: 1, src: require('../Images/campus.jpg'), content:'campus text' },
+    { id: 1, src: require('../Images/campus1.jpg'), content:'campus text' },
     { id: 2, src: require('../Images/Internet.jpg'), content :'credential text'  },
     { id: 3, src: require('../Images/Person.jpg'), content :'indentify text'  },
     { id: 4, src: require('../Images/Navigation.jpg'), content :'navigation text'  },
@@ -132,7 +132,7 @@ class Gallery extends Component {
             opacity: this.animation
         }
         return (
-            <SafeAreaView style={{ flex: 1,paddingTop:25 }}>
+            <SafeAreaView style={{ flex: 1}}>
                 <StatusBar backgroundColor='#00121f' barStyle='light-content' />
                <View key="sticky-header" style={styles.stickySection}>
                 <Image style={{height: 38,width: 40}} source={require('../Images/logo_small.png')}/><Text style={styles.stickySectionText}>OTAGO Polytechnic</Text>
@@ -147,7 +147,7 @@ class Gallery extends Component {
                                     <Image
                                         ref={(image) => (this.allImages[index] = image)}
                                         source={image.src}
-                                        style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
+                                        style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 5 }}
                                     />
                                 </Animated.View>
                             </TouchableWithoutFeedback>

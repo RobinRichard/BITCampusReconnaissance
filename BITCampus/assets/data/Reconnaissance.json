@@ -10,7 +10,7 @@
                     {
                         placeholder: 'Username here...',
                         name : 'username',
-                        title : 'what is your name',
+                        title : 'what is your sdjfdsj dsjfdshfajfsdh af hjfjs df gsdajgf saj gfjasd gfasjd gfjasgfjsadgfjsdgfj name',
                         type :'text',
                         response :' ',
                         status : '1'
