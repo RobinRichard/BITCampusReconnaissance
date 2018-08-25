@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Linking, TextInput } from 'react-native';
+
+import { Actions } from 'react-native-router-flux';
 import Wizard from '../Components/Wizard';
 import Input from '../Components/Input';
 
@@ -9,10 +11,15 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      questionList: this.props.questionList
+      questionList: this.props.questionList,
+      title:this.props.title
     };
 
   }
+  componentWillMount() {
+       
+    Actions.Wizard({ title: this.state.title })
+}
   render() {
     return (
       <View style={styles.root}>
