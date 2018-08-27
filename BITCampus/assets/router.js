@@ -67,14 +67,14 @@ export const SignedIn = createBottomTabNavigator({
   }
 }, {
     tabBarOptions: {
-      activeTintColor: 'white',
-      inactiveTintColor: '#00121f',
+      activeTintColor: '#004898',
+      inactiveTintColor: '#666666',
       labelStyle: {
         fontSize: 12,
         fontWeight: 'bold'
       },
       style: {
-        backgroundColor: '#004898',
+        backgroundColor: '#ffffff',
         borderTopWidth: 1,
         paddingTop: 5,
         height:50,

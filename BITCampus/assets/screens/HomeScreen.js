@@ -58,12 +58,15 @@ class Home extends Component {
               <View key="parallax-header" style={ styles.parallaxHeader }>
                 <Image style={ styles.avatar } source={require('../Images/logo.jpg')}/>
                 <Text style={ styles.sectionSpeakerText }>
-                  otago polytechnic
+                  OTAGO polytechnic
                 </Text>
                 <Text style={ styles.sectionTitleText }>
                   Te Kura Matatini ki Otago
                 </Text>
-              </View>
+                <Text style={ styles.sectionTitleText }>
+                  scroll down
+                </Text>
+                 </View>
             )}
 
             renderStickyHeader={() => (

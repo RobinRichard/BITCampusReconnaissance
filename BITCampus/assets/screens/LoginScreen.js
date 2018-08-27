@@ -57,7 +57,7 @@ class Login extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container}>
-        <Text h2 style={styles.title}>Ventirik</Text>
+        <Text style={styles.title}>Reconnaissance</Text>
         <Animated.Image source={require('../Icon/logo.png')} style={[styles.logo, { height: this.imageHeight }]} />
         
         <LoginForm navigation={this.props.navigation} />
@@ -78,7 +78,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   title:{
-    color:'#e8630a'
+    color:'#004898',
+    fontSize:20,
+    fontWeight:'bold'
   }
 
 });
