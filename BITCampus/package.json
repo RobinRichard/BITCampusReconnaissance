@@ -10,7 +10,7 @@
     "native-base": "^2.7.2",
     "prop-types": "^15.6.2",
     "react": "16.4.1",
-    "react-native": "0.55.2",
+    "react-native": "0.56.0",
     "react-native-elements": "^0.19.1",
     "react-native-image-slider": "^2.0.3",
     "react-native-linear-gradient": "^2.4.0",
