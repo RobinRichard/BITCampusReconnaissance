@@ -75,9 +75,18 @@ WSGI_APPLICATION = 'Reconnaissance.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'arulr1_Reconnaissance', # TODO your database name
+        'USER': 'arulr1', # TODO your username
+        'PASSWORD': '1000054229', # TODO your password
+        'HOST': 'mariadb.ict.op.ac.nz',
+        'OPTIONS'  : { 'init_command' : 'SET storage_engine=INNODB', },
     }
 }
 

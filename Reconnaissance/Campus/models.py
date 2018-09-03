@@ -41,7 +41,7 @@ class Category(models.Model):
 
 class Section(models.Model):
     section_name = models.CharField(max_length=250)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,related_name='sectionCategory')
 
     def __str__(self):
         return self.section_name
