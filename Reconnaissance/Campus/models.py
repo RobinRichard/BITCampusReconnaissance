@@ -34,6 +34,7 @@ class User(models.Model):
 class Category(models.Model):
     category_name = models.CharField(max_length=100)
     category_color = models.CharField(max_length=10)
+    category_icon = models.CharField(max_length=30)
 
     def __str__(self):
         return self.category_name

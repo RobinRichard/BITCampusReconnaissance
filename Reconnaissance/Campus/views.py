@@ -1,9 +1,53 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
 from django.core import serializers
-from django.db.models import Prefetch
 from .models import *
+from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from . import serializer
 import json
+
+#api
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = serializer.CategorySerializer
+    queryset = Category.objects.all()
+   
+class SectionViewSet(viewsets.ModelViewSet):
+    serializer_class = serializer.SectionSerializer
+    queryset = Section.objects.all()
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    serializer_class = serializer.QuestionSerializer
+    queryset = Question.objects.all()
+
+def getAnswers(request):
+   
+    if request.method == "GET":
+        rest_list = ''
+        qid = request.GET.get('qid')
+        uid = request.GET.get('uid')
+
+        if qid and uid:
+            rest_list = Reconnaissance.objects.filter(question_id=qid).filter(user_id=uid)
+       
+        ser = serializer.AnswerSerializer(rest_list, many=True)
+        return JsonResponse(ser.data, safe=False)
+def applogin(request):
+    if request.method == "GET":
+        rest_list = ''
+        uname = request.GET.get('uname')
+        password = request.GET.get('password')
+        if uname and password:
+            try:
+                u= User.objects.filter(user_mail=uname).filter(user_password=password)
+                if u.count() != 0:
+                    rest_list=u
+            except User.DoesNotExist:
+                rest_list=None
+        ser = serializer.UserSerializer(rest_list, many=True)
+        return JsonResponse(ser.data, safe=False)
+
 # Create your views here.
 def login(request):
     return render(request, 'Campus/login.html')
@@ -119,16 +163,16 @@ def getCategory(request):
     c = None
     if request.method == 'POST':
         category_id = request.POST.get('category_id')
-        try:
-            if category_id == "":
-                c = Category.objects.all()
-            else:
-                c = Category.objects.filter(id=category_id)
-            response_data['flag'] = "1"
-            response_data['result'] = serializers.serialize('json',c)
-        except:
-            response_data['flag'] = "0"
-            response_data['result'] = "Error in getting Date"
+        # try:
+        if category_id == "":
+            c = Category.objects.all()
+        else:
+            c = Category.objects.filter(id=category_id)
+        response_data['flag'] = "1"
+        response_data['result'] = serializers.serialize('json',c)
+        # except:
+        #     response_data['flag'] = "0"
+        #     response_data['result'] = "Error in getting Date"
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
@@ -138,10 +182,12 @@ def categoryAction(request):
         c_id = request.POST.get('id')
         c_name = request.POST.get('category_name')
         c_color = request.POST.get('category_color')
+        c_icon = request.POST.get('category_icon')
         if c_id == "":
             try:
                 c = Category.objects.create(category_name = c_name,
-                                            category_color = c_color
+                                            category_color = c_color,
+                                            category_icon = c_icon
                                            )
                 response_data['flag'] = "1"
                 response_data['result'] = "Category saved Successfully"
@@ -151,7 +197,8 @@ def categoryAction(request):
         else:
             try:
                 c = Category.objects.filter(id=c_id).update(category_name=c_name,
-                                            category_color=c_color
+                                            category_color=c_color,
+                                            category_icon = c_icon
                                            )
                 response_data['flag'] = "1"
                 response_data['result'] = "Category Updated Successfully"
@@ -314,6 +361,25 @@ def getUser(request):
     response_data = {}
     user = None
     if request.method == 'POST':
+        id = request.POST.get('user_id')
+        if id == "":
+            user = User.objects.all()
+        else:
+            user = User.objects.filter(id=id)
+        if user.count() == 0:
+            response_data['flag'] = "0"
+            response_data['result'] = 'No User found'
+        else:
+            response_data['flag'] = "1"
+            response_data['result'] = serializers.serialize('json', user)
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def getcount(request):
+    response_data = {}
+    user = None
+    if request.method == 'GET':
         id = request.POST.get('user_id')
         if id == "":
             user = User.objects.all()

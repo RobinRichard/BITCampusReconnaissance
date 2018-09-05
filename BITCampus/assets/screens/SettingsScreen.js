@@ -3,11 +3,12 @@ import {
   View,
   StyleSheet,
   SafeAreaView,
-  Platform,
+  AsyncStorage,
   StatusBar,
   ActivityIndicator,
 } from "react-native";
-import { Card, Text, Avatar } from "react-native-elements";
+import { Container, Left, Right, Card, CardItem, Body } from 'native-base';
+import { Text, Avatar } from "react-native-elements";
 import { Icon } from 'native-base';
 
 import { onSignOut } from "../auth";
@@ -18,22 +19,16 @@ class Settings extends Component {
     super(props);
     this.state = { isLoading: true }
   }
+
   componentWillMount() {
-    return fetch('http://10.118.0.186:3000/api/getstudent')
-      .then((response) => response.json())
-      .then((responseJson) => {
-
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson.recordset[0],
-        }, function () {
-          // alert(this.state.dataSource['studentFirstName']);
-        });
-
-      })
-      .catch((error) => {
-        console.error(error);
+    AsyncStorage.getItem('user', (err, result) => {
+      this.setState({
+        isLoading: false,
+        dataSource: JSON.parse(result),
+      }, function () {
+        // alert(this.state.dataSource[0]['user_name']);
       });
+    });
   }
 
   render() {
@@ -44,43 +39,52 @@ class Settings extends Component {
         </View>
       )
     }
+    else {
+      return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white',padding:5 }}>
+          <StatusBar backgroundColor='#00121f' barStyle='light-content' />
+          <Card>
+            <CardItem >
+              <Left/>
+              <Right><Icon type="FontAwesome" style={{ color: 'black',fontSize:22 }} name="power-off" onPress={() => onSignOut().then(() => this.props.navigation.navigate("SignedOut"))} /></Right>
+            </CardItem>
+            <CardItem bordered>
+              <Body>
+                <View style={styles.usercontainer}>
+                <Text style={styles.texttitle}>{this.state.dataSource[0]['user_name']}</Text>
+                  <Avatar
+                    xlarge
+                    rounded
+                    source={require('../Images/user.png')}
+                    onPress={() => console.log("Works!")}
+                    activeOpacity={0.7}
 
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-        <StatusBar backgroundColor='#00121f' barStyle='light-content' />
+                  />
+                  <View style={{ flexDirection: 'row', margin: 5 }}>
+                    <View style={styles.textcontainer} ><Text h4>#{this.state.dataSource[0]['user_rollno']} </Text></View>
+                  </View>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.textcontainer} ><Text>{this.state.dataSource[0]['user_department']}</Text></View>
+                  </View>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="phone" /> {this.state.dataSource[0]['user_phone']}</Text></View>
+                  </View>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="envelope" /> {this.state.dataSource[0]['user_mail']}</Text></View>
+                  </View>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.textcontainer} ><Text>Address : {this.state.dataSource[0]['user_address']}</Text></View>
+                  </View>
 
-        <Card style={{ flex: 1 }} title={this.state.dataSource['studentFirstName'] + ' '+ this.state.dataSource['studentLastName']}>
-          <View style={styles.usercontainer}>
-            <Icon type="FontAwesome" style={{ color: 'black' }} name="power-off" onPress={() => onSignOut().then(() => this.props.navigation.navigate("SignedOut"))}/>
-            <Avatar
-              xlarge
-              rounded
-              source={require('../Images/user.png')}
-              onPress={() => console.log("Works!")}
-              activeOpacity={0.7}
+                </View>
+              </Body>
+            </CardItem>
+          </Card>
 
-            />
-            <View style={{ flexDirection: 'row', margin: 5 }}>
-              <View style={styles.textcontainer} ><Text h4>#{this.state.dataSource['studentRollNo']} </Text></View>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.textcontainer} ><Text>{this.state.dataSource['studentDepartment']}</Text></View>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="phone" /> {this.state.dataSource['studentphone']}</Text></View>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="envelope" /> {this.state.dataSource['studentEmail']}</Text></View>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.textcontainer} ><Text>Address : {this.state.dataSource['studentAddress']}</Text></View>
-            </View>
 
-          </View>
-        </Card>
-
-      </SafeAreaView>
-    );
+        </SafeAreaView>
+      );
+    }
   }
 }
 export default Settings;
@@ -99,5 +103,13 @@ const styles = StyleSheet.create({
   },
   headerStyle: {
     backgroundColor: '#e8630a'
+  },
+  texttitle: {
+    fontSize: 20,
+    fontWeight:'200',
+    color:'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom:10
   }
 });

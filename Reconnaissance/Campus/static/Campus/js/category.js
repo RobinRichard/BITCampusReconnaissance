@@ -35,6 +35,7 @@ $(document).ready(function() {
         $('#cid').val("");
         $('#cname').val("");
         $('#ccolor').val("");
+        $('#cicon').val("");
         $('#categoryModal').modal({backdrop: 'static', keyboard: false});
     });
 
@@ -42,10 +43,13 @@ $(document).ready(function() {
         category_id = $('#cid').val();
         category_name = $('#cname').val();
         category_color = $('#ccolor').val();
+        category_icon = $('#cicon').val();
         var validation = '0';
         if(category_name=="")
             validation = '1';
         if(category_color=="")
+            validation= '1';
+        if(category_icon=="")
             validation= '1';
 
         if(validation=='0'){
@@ -57,6 +61,7 @@ $(document).ready(function() {
                 'id' : category_id,
                 'category_name' : category_name ,
                 'category_color' : category_color ,
+                'category_icon' : category_icon ,
                 'csrfmiddlewaretoken' : $('input[name="csrfmiddlewaretoken"]').val()
             },
             dataType: 'json',
@@ -99,6 +104,7 @@ $(document).ready(function() {
                     $('#cid').val(id);
                     $('#cname').val(object[0]['fields'].category_name);
                     $('#ccolor').val(object[0]['fields'].category_color);
+                    $('#cicon').val(object[0]['fields'].category_icon);
                     $('#categoryModal').modal({backdrop: 'static', keyboard: false});
                 }
             },

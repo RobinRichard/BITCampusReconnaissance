@@ -1,5 +1,14 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
+from rest_framework import routers
+
+
+router = routers.DefaultRouter()
+
+router.register('categoryList', views.CategoryViewSet)
+router.register('sectionList', views.SectionViewSet)
+router.register('questionList', views.QuestionViewSet)
+
 
 urlpatterns = [
     path('', views.login, name='loginpage'),
@@ -28,4 +37,9 @@ urlpatterns = [
 
     path('ajax/getUser', views.getUser, name='getUser'),
     path('ajax/useraction', views.userAction, name='useraction'),
+
+    path('ajax/getAnswers', views.getAnswers, name='getAnswers'),
+    path('ajax/applogin', views.applogin, name='applogin'),
+    
+    path('api/', include(router.urls))
 ]

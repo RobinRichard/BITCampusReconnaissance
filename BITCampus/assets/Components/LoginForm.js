@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, AsyncStorage } from "react-native";
 import { Button, FormLabel, FormInput } from "react-native-elements";
 import { onSignIn } from "../auth";
 
@@ -10,8 +10,19 @@ class LoginForm extends Component {
     this.state = { uname: '', password: '' }
   }
   checkLogin = () => {
-    alert(this.state.uname + ' : ' + this.state.password)
-    onSignIn().then(() => this.props.navigation.navigate("SignedIn"));
+    return fetch('http://10.0.2.2:8000/ajax/applogin?uname=' + this.state.uname + '&password=' + this.state.password)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.length != 0) {
+          AsyncStorage.setItem('user', JSON.stringify(responseJson)).then(() => { onSignIn().then(() => this.props.navigation.navigate("SignedIn")); })
+        }
+        else {
+          alert('Invalid username or password')
+        }
+      })
+      .catch((error) => {
+        alert(error)
+      });
   }
   render() {
     return (
