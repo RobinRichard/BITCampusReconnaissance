@@ -1,5 +1,4 @@
 from django.db import models
-import datetime
 
 class Role(models.Model):
     user_role = models.CharField(max_length=20)
@@ -51,7 +50,7 @@ class Question(models.Model):
     question_type = models.ForeignKey(Type, on_delete=models.CASCADE)
     question_validation = models.CharField(max_length=250)
     question_description = models.CharField(max_length=250)
-
+    section = models.ForeignKey(Section, on_delete=models.CASCADE,related_name='questionSection')
     def __str__(self):
         return self.question_text
 
