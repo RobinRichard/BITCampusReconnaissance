@@ -8,7 +8,7 @@ router = routers.DefaultRouter()
 router.register('categoryList', views.CategoryViewSet)
 router.register('sectionList', views.SectionViewSet)
 router.register('questionList', views.QuestionViewSet)
-
+router.register('statusList', views.StatusViewSet)
 
 urlpatterns = [
     path('', views.login, name='loginpage'),
@@ -40,6 +40,7 @@ urlpatterns = [
 
     path('ajax/getAnswers', views.getAnswers, name='getAnswers'),
     path('ajax/applogin', views.applogin, name='applogin'),
+    path('ajax/apiCategory', views.apiCategory, name='apiCategory'),
     
     path('api/', include(router.urls))
 ]

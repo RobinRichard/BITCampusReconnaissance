@@ -21,6 +21,12 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reconnaissance
         fields = "__all__"
+
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = "__all__"
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

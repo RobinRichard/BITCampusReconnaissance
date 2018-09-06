@@ -21,6 +21,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = serializer.QuestionSerializer
     queryset = Question.objects.all()
 
+class StatusViewSet(viewsets.ModelViewSet):
+    serializer_class = serializer.StatusSerializer
+    queryset = Status.objects.all()
+
 def getAnswers(request):
    
     if request.method == "GET":
@@ -33,6 +37,31 @@ def getAnswers(request):
        
         ser = serializer.AnswerSerializer(rest_list, many=True)
         return JsonResponse(ser.data, safe=False)
+
+def apiCategory(request):
+   
+    if request.method == "GET":
+        id = request.GET.get('id')
+        rest_list = {}
+        cat = Category.objects.all()
+        catser = serializer.CategorySerializer(cat, many=True)
+
+        sec = Section.objects.all()
+        secser = serializer.SectionSerializer(sec, many=True)
+
+        qus = Question.objects.all()
+        qusser = serializer.QuestionSerializer(qus, many=True)
+
+        ans = Reconnaissance.objects.filter(user_id=id)
+        ansser = serializer.AnswerSerializer(ans, many=True)
+
+        rest_list['category'] = catser.data
+        rest_list['section'] = secser.data
+        rest_list['qusetion'] = qusser.data
+        rest_list['answers'] = ansser.data
+
+        return JsonResponse(rest_list, safe=False)
+
 def applogin(request):
     if request.method == "GET":
         rest_list = ''
