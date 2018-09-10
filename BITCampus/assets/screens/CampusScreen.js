@@ -3,6 +3,7 @@ import { Router, Scene } from 'react-native-router-flux';
 import Category from './CategoryScreen';
 import List from './ListScreen';
 import Wizard from './WizardScreen';
+import Reconnaissance from './ReconnaissanceScreen';
 
 class Campus extends Component {
 
@@ -29,6 +30,15 @@ class Campus extends Component {
           <Scene
             key="Wizard"
             component={Wizard}
+            title="Reconnaissance"
+            transitionConfig
+            tintColor='#004898'
+            titleStyle={{ color: '#004898' }}
+            navigationBarStyle={{ backgroundColor: 'white' }}
+          />
+           <Scene
+            key="Reconnaissance"
+            component={Reconnaissance}
             title="Reconnaissance"
             transitionConfig
             tintColor='#004898'

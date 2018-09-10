@@ -67,7 +67,7 @@ render() {
                         data={this.state.sectionData}
                         renderItem={
                             ({ item }) =>
-                                <TouchableOpacity onPress={() => Actions.Wizard({ section_id: item.id, title: item.section_name })}>
+                                <TouchableOpacity onPress={() => Actions.Reconnaissance({ section_id: item.id, title: item.section_name })}>
                                     <View style={{ flex: 1, flexDirection: 'row', padding: 5 }} >
                                         <View style={{ flex: 4, justifyContent: 'center', padding: 10 }}>
                                             <Text style={styles.item} >{item.section_name}</Text>
