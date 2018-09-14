@@ -1,26 +1,13 @@
 import React, { Component } from "react";
-import { View, Dimensions,Text,TextInput, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage } from "react-native";
+import { View, Dimensions, TextInput, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage } from "react-native";
 import { Divider } from 'react-native-elements';
-import { Icon } from 'native-base';
+import { Icon, Textarea, Button, Text } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from "react-native-underline-tabbar";
-const window = Dimensions.get('window');
+import _ from 'lodash';
 
-const Page = ({label,type}) => (
-    <View style={styles.container}>
-        <Text style={styles.welcome}>
-            {label} {this.id}
-        </Text>
-        <Text style={styles.instructions}>
-            To get started, edit index.ios.js
-      </Text>
-        <Text style={styles.instructions}>
-            Press Cmd+R to reload,{'\n'}
-            Cmd+D or shake for dev menu
-      </Text>
-    </View>
-);
+const window = Dimensions.get('window');
 
 class Reconnaissance extends Component {
     constructor(props) {
@@ -28,6 +15,7 @@ class Reconnaissance extends Component {
         this.state = {
             isLoading: true,
         };
+        this.submitAns = this.submitAns.bind(this);
     }
     componentWillMount() {
         Actions.Reconnaissance({ title: this.props.title })
@@ -47,12 +35,15 @@ class Reconnaissance extends Component {
                             var answerJson = {}
                             this.state.questionData.map(function (item) {
                                 var key = item.id
-                                answerJson[key] = answerdata.filter(data => data.question == item.id)[0]['answer_text'].toString()
+                                if (answerdata.filter(data => data.question == item.id).length > 0)
+                                    answerJson[key] = answerdata.filter(data => data.question == item.id)[0]['answer_text']
                             })
+
                             this.setState({
                                 isLoading: false,
                                 answers: answerJson
                             });
+
                         });
                     })
                     .catch((error) => {
@@ -62,13 +53,44 @@ class Reconnaissance extends Component {
         });
     }
 
+    submitAns(id) {
+        alert(id+this.state.answers[id])
+         return fetch('http://10.0.2.2:8000/ajax/updateAnswer?qid='+id+'&uid='+ this.state.userId+'&ans=' + this.state.answers[id])
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                        alert(responseJson['status'])
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
+      
+    }
+
+    handleChange = (e, id) => {
+        let newanswers = this.state.answers;
+        newanswers[id] = e
+        this.setState({ answers: newanswers })
+    };
 
     render() {
+
         if (!this.state.isLoading) {
+            var Page = ({ label, type, qid, ans }) => (
+                <View style={styles.container}>
+                    <Text style={styles.welcome}>{label}</Text>
+                    {type == 1 ? <Textarea autoFocus onChangeText={(text) => this.handleChange(text, qid)} value={ans} style={{ width: '85%' }} rowSpan={5} bordered placeholder="Textarea" /> : null}
+                    {type == 2 ? <Text>Task</Text> : null}
+                    {type == 3 ? <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('http://google.com')}>Google</Text> : null}
+                    <TouchableOpacity>
+                        <Button success onPress={() => this.submitAns(qid)} ><Text>Submit </Text></Button>
+                    </TouchableOpacity>
+                </View>
+            );
             var i = 1
+            var answertemp = this.state.answers
             TabList = this.state.questionData.map(function (item) {
                 return (
-                    <Page key={item.id} tabLabel={{ label: "Question # "+(i++) }} label={item.question_text} id={1} />
+                    <Page key={item.id} tabLabel={{ label: "Question # " + (i++) }} label={item.question_text} type={item.question_type} qid={item.id} ans={answertemp[item.id]} />
                 );
             });
         }
@@ -86,9 +108,10 @@ class Reconnaissance extends Component {
                 <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                     <View style={[styles.container, { paddingTop: 10 }]}>
                         <ScrollableTabView
-                            tabBarActiveTextColor="#53ac49"
+                            tabBarActiveTextColor="white"
                             tabMargin
-                            renderTabBar={() => <TabBar tabStyles={{tab:{width:window.width/this.state.questionData.length}}} underlineColor="#53ac49" />}>
+                            style={{ minWidth: window.width / 1.5 }}
+                            renderTabBar={() => <TabBar tabStyles={{ tab: { backgroundColor: 'gray', padding: 10, borderRadius: 10, margin: 3 } }} underlineColor="white" />}>
                             {TabList}
                         </ScrollableTabView>
 

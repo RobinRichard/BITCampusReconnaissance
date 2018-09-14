@@ -15,6 +15,11 @@ class Category extends Component {
 
     }
     componentWillMount() {
+        this.FetchData()
+    };
+
+    FetchData(){
+        alert('worked')
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
@@ -39,9 +44,7 @@ class Category extends Component {
                     });
             });
         });
-
-    };
-
+    }
     render() {
         if (!this.state.isLoading) {
             var section = this.state.sectionData

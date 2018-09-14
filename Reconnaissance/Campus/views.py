@@ -38,6 +38,30 @@ def getAnswers(request):
         ser = serializer.AnswerSerializer(rest_list, many=True)
         return JsonResponse(ser.data, safe=False)
 
+def updateAnswer(request):
+     if request.method == "GET":
+        rest_list = ''
+        qid = request.GET.get('qid')
+        uid = request.GET.get('uid')    
+        ans = request.GET.get('ans')
+        try:
+            r = Reconnaissance.objects.filter(question_id=qid).filter(user_id=uid)
+            if r.count() == 0:
+                r = Reconnaissance.objects.create(question_id=qid,
+                                            user_id=uid,
+                                            answer_text=ans,
+                                            answer_status_id=3
+                                           )
+                return JsonResponse({'status':'Answer added  successfully'}, safe=False)
+            else:
+                r = Reconnaissance.objects.filter(question_id=qid).filter(user_id=uid).update(answer_text=ans,
+                                                                                              answer_status_id=3)
+                return JsonResponse({'status':'Answers updated successfully'}, safe=False)
+                                             
+        except Reconnaissance.DoesNotExist:
+           return JsonResponse({'status':'Failed to save'}, safe=False)
+            
+
 def apiCategory(request):
    
     if request.method == "GET":

@@ -15,6 +15,10 @@ class List extends Component {
     }
     componentWillMount() {
         Actions.List({ title: this.props.category })
+        this.FetchData()
+    };
+
+    FetchData(){
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
