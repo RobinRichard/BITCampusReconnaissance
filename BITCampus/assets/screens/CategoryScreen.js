@@ -18,8 +18,13 @@ class Category extends Component {
         this.FetchData()
     };
 
+    static onEnter(){
+        setTimeout(() => {
+            Actions.refresh({ key: new Date().getTime() });
+        }, 500);
+    }
+
     FetchData(){
-        alert('worked')
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({

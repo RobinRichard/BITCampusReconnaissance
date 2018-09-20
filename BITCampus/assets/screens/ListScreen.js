@@ -17,6 +17,12 @@ class List extends Component {
         Actions.List({ title: this.props.category })
         this.FetchData()
     };
+    
+    static onEnter(){
+        setTimeout(() => {
+            Actions.refresh({ key: new Date().getTime() });
+        }, 500);
+    }
 
     FetchData(){
         AsyncStorage.getItem('user', (err, result) => {
