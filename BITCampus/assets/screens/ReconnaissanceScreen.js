@@ -5,7 +5,7 @@ import { Icon, Textarea, Button, Text } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from "react-native-underline-tabbar";
-import _ from 'lodash';
+import Swiper from 'react-native-swiper'
 
 const window = Dimensions.get('window');
 
@@ -14,6 +14,7 @@ class Reconnaissance extends Component {
         super(props);
         this.state = {
             isLoading: true,
+            value:''
         };
         this.submitAns = this.submitAns.bind(this);
     }
@@ -54,7 +55,6 @@ class Reconnaissance extends Component {
     }
 
     submitAns(id) {
-        alert(id+this.state.answers[id])
          return fetch('http://10.0.2.2:8000/ajax/updateAnswer?qid='+id+'&uid='+ this.state.userId+'&ans=' + this.state.answers[id])
                     .then((response) => response.json())
                     .then((responseJson) => {
@@ -72,6 +72,7 @@ class Reconnaissance extends Component {
         this.setState({ answers: newanswers })
     };
 
+   
     render() {
 
         if (!this.state.isLoading) {
@@ -107,6 +108,9 @@ class Reconnaissance extends Component {
             return (
                 <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                     <View style={[styles.container, { paddingTop: 10 }]}>
+                        <TouchableOpacity style={styles.imgContainer} onPress={() => Actions.List({ category_id: this.props.catid, category: this.props.category,key: new Date().getTime() })}>
+                           <Text>list</Text>
+                            </TouchableOpacity>
                         <ScrollableTabView
                             tabBarActiveTextColor="white"
                             tabMargin

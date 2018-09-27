@@ -15,16 +15,21 @@ class Category extends Component {
 
     }
     componentWillMount() {
-        this.FetchData()
-    };
-
-    static onEnter(){
-        setTimeout(() => {
-            Actions.refresh({ key: new Date().getTime() });
-        }, 500);
+        this.props.navigation.addListener('didFocus', () => this.onFocus())
+        this.props.navigation.addListener('didBlur', () => this.onBlur())
     }
 
-    FetchData(){
+    onFocus() {
+        this.FetchData()
+    }
+
+    onBlur() {
+        this.setState({
+            isLoading: true,
+        });
+    }
+
+    FetchData() {
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
@@ -63,13 +68,13 @@ class Category extends Component {
                 section.filter(data => data.category == item.id).map(function (sitem) {
                     var flag = false
                     question.filter(data => data.section == sitem.id).map(function (qitem) {
-                        flag = answer.filter(data => data.question == qitem.id && data.answer_status==3).length == 1 ? true : false 
+                        flag = answer.filter(data => data.question == qitem.id && data.answer_status == 3).length == 1 ? true : false
                     })
                     answeredQues += flag ? 1 : 0
                 });
 
                 return (
-                    <TouchableOpacity key={item.id} style={styles.imgContainer} onPress={() => Actions.List({ category_id: item.id, category: item.category_name })}>
+                    <TouchableOpacity key={item.id} style={styles.imgContainer} onPress={() => Actions.List({ category_id: item.id, category: item.category_name, date: new Date().getTime() })}>
                         <View style={{ backgroundColor: item.category_color, borderRadius: 5 }}>
                             <View style={styles.TextContainer}>
                                 <View style={{ flex: 1 }}><Icon type="FontAwesome" style={{ fontSize: 28, color: 'white' }} name={item.category_icon} /></View>

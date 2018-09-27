@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage,BackHandler } from "react-native";
 import { Divider } from 'react-native-elements';
 import { Icon } from 'native-base';
 import { Actions } from 'react-native-router-flux';
@@ -10,19 +10,25 @@ class List extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            flag: false
+            flag: false,
         };
     }
+
     componentWillMount() {
         Actions.List({ title: this.props.category })
-        this.FetchData()
-    };
-    
-    static onEnter(){
-        setTimeout(() => {
-            Actions.refresh({ key: new Date().getTime() });
-        }, 500);
+        this.props.navigation.addListener('didFocus', () => this.onFocus())
+        this.props.navigation.addListener('didBlur', () => this.onBlur())
     }
+    onFocus() {
+        this.FetchData()
+    }
+
+    onBlur() {
+        this.setState({
+            isLoading: true,
+        });
+    }
+
 
     FetchData(){
         AsyncStorage.getItem('user', (err, result) => {
@@ -77,7 +83,7 @@ render() {
                         data={this.state.sectionData}
                         renderItem={
                             ({ item }) =>
-                                <TouchableOpacity onPress={() => Actions.Reconnaissance({ section_id: item.id, title: item.section_name })}>
+                                <TouchableOpacity onPress={() => Actions.Reconnaissance({ section_id: item.id, title: item.section_name, catid:this.props.category_id,category: this.props.category})}>
                                     <View style={{ flex: 1, flexDirection: 'row', padding: 5 }} >
                                         <View style={{ flex: 4, justifyContent: 'center', padding: 10 }}>
                                             <Text style={styles.item} >{item.section_name}</Text>
