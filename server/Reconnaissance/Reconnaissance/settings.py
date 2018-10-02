@@ -25,18 +25,20 @@ SECRET_KEY = 'f6qmz8v9%xcam!w05uy)5ooe=4axj7l#m7kamqug8g#@42(b$$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1','10.25.100.62']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'Campus.apps.CampusConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
