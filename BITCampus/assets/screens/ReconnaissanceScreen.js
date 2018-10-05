@@ -1,24 +1,36 @@
 import React, { Component } from "react";
-import { View, Dimensions,Text,TextInput, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage } from "react-native";
-import { Divider } from 'react-native-elements';
-import { Icon } from 'native-base';
+import { View, Dimensions,Text,Switch,TextInput, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage } from "react-native";
+import { Container, Header, Content, Textarea, Form } from "native-base";
 import { Actions } from 'react-native-router-flux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from "react-native-underline-tabbar";
 const window = Dimensions.get('window');
 
-const Page = ({label,type}) => (
+const Page = ({label}) => (
     <View style={styles.container}>
         <Text style={styles.welcome}>
-            {label} {this.id}
+            {label} 
         </Text>
-        <Text style={styles.instructions}>
-            To get started, edit index.ios.js
-      </Text>
-        <Text style={styles.instructions}>
-            Press Cmd+R to reload,{'\n'}
-            Cmd+D or shake for dev menu
-      </Text>
+        <Textarea rowSpan={5} bordered placeholder="Textarea" />
+    </View>
+);
+
+const Task = ({label}) => (
+    <View style={styles.container}>
+        <Text style={styles.welcome}>
+            {label} 
+        </Text>
+        <Switch onChangeValue={this.toggleSwitch} value ={this.state.sqitchValue}></Switch>
+
+    </View>
+);
+
+const Link = ({label}) => (
+    <View style={styles.container}>
+        <Text style={styles.welcome}>
+            {label} 
+        </Text>
+
     </View>
 );
 
@@ -27,6 +39,7 @@ class Reconnaissance extends Component {
         super(props);
         this.state = {
             isLoading: true,
+            switchvalue:false
         };
     }
     componentWillMount() {
@@ -62,13 +75,16 @@ class Reconnaissance extends Component {
         });
     }
 
+    toggleSwitch(){
+        this.state.switchValue = !this.state.switchValue
+    }
 
     render() {
         if (!this.state.isLoading) {
             var i = 1
             TabList = this.state.questionData.map(function (item) {
                 return (
-                    <Page key={item.id} tabLabel={{ label: "Question # "+(i++) }} label={item.question_text} id={1} />
+                    item.question_type==1?<Page key={item.id} tabLabel={{ label: "Question # "+(i++) }} label={item.question_text} />:null
                 );
             });
         }
@@ -88,7 +104,7 @@ class Reconnaissance extends Component {
                         <ScrollableTabView
                             tabBarActiveTextColor="#53ac49"
                             tabMargin
-                            renderTabBar={() => <TabBar tabStyles={{tab:{width:window.width/this.state.questionData.length}}} underlineColor="#53ac49" />}>
+                            renderTabBar={() => <TabBar tabStyles={{tab:{width:(window.width-40)/this.state.questionData.length}}} underlineColor="#53ac49" />}>
                             {TabList}
                         </ScrollableTabView>
 

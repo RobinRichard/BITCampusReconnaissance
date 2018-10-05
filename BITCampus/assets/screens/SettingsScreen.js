@@ -28,7 +28,9 @@ class Settings extends Component {
       }, function () {
         // alert(this.state.dataSource[0]['user_name']);
       });
-    });
+    }).catch((error) => {
+      this.props.navigation.navigate("SignedOut")
+  });
   }
 
   render() {
