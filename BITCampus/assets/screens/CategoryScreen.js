@@ -35,7 +35,7 @@ class Category extends Component {
             this.setState({
                 userId: user[0]['id']
             }, function () {
-                return fetch('http://10.0.2.2:8000/ajax/apiCategory?id=' + this.state.userId)
+                return fetch('http://robinrichard.pythonanywhere.com/ajax/apiCategory?id=' + this.state.userId)
                     .then((response) => response.json())
                     .then((responseJson) => {
                         this.setState({
