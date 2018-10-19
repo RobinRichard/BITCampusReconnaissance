@@ -10,7 +10,7 @@ class LoginForm extends Component {
     this.state = { uname: '', password: '' }
   }
   checkLogin = () => {
-    return fetch('http://10.0.2.2:8000/ajax/applogin?uname=' + this.state.uname + '&password=' + this.state.password)
+    return fetch('http://robinrichard.pythonanywhere.com/ajax/applogin?uname=' + this.state.uname + '&password=' + this.state.password)
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.length != 0) {

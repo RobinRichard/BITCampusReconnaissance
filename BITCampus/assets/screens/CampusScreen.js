@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Router, Scene } from 'react-native-router-flux';
+import { Router, Scene, Actions } from 'react-native-router-flux';
 import Category from './CategoryScreen';
 import List from './ListScreen';
 import Wizard from './WizardScreen';
 import Reconnaissance from './ReconnaissanceScreen';
 
 class Campus extends Component {
+
 
   render() {
     return (

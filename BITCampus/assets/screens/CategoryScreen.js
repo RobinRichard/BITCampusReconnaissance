@@ -15,12 +15,32 @@ class Category extends Component {
 
     }
     componentWillMount() {
+        this.props.navigation.addListener('didFocus', () => this.onFocus())
+        this.props.navigation.addListener('didBlur', () => this.onBlur())
+    }
+
+    onFocus() {
+        this.FetchData()
+    }
+
+    onBlur() {
+        this.setState({
+            isLoading: true,
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.navigation.removeListener('didFocus', () => this.onFocus())
+        this.props.navigation.removeListener('didBlur', () => this.onBlur())
+    }
+
+    FetchData() {
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
                 userId: user[0]['id']
             }, function () {
-                return fetch('http://10.0.2.2:8000/ajax/apiCategory?id=' + this.state.userId)
+                return fetch('http://robinrichard.pythonanywhere.com/ajax/apiCategory?id=' + this.state.userId)
                     .then((response) => response.json())
                     .then((responseJson) => {
                         this.setState({
@@ -39,9 +59,7 @@ class Category extends Component {
                     });
             });
         });
-
-    };
-
+    }
     render() {
         if (!this.state.isLoading) {
             var section = this.state.sectionData
@@ -55,13 +73,13 @@ class Category extends Component {
                 section.filter(data => data.category == item.id).map(function (sitem) {
                     var flag = false
                     question.filter(data => data.section == sitem.id).map(function (qitem) {
-                        flag = answer.filter(data => data.question == qitem.id && data.answer_status==3).length == 1 ? true : false 
+                        flag = answer.filter(data => data.question == qitem.id && data.answer_status == 3).length == 1 ? true : false
                     })
                     answeredQues += flag ? 1 : 0
                 });
 
                 return (
-                    <TouchableOpacity key={item.id} style={styles.imgContainer} onPress={() => Actions.List({ category_id: item.id, category: item.category_name })}>
+                    <TouchableOpacity key={item.id} style={styles.imgContainer} onPress={() => Actions.List({ category_id: item.id, category: item.category_name, date: new Date().getTime() })}>
                         <View style={{ backgroundColor: item.category_color, borderRadius: 5 }}>
                             <View style={styles.TextContainer}>
                                 <View style={{ flex: 1 }}><Icon type="FontAwesome" style={{ fontSize: 28, color: 'white' }} name={item.category_icon} /></View>

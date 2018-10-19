@@ -41,6 +41,8 @@ urlpatterns = [
     path('ajax/getAnswers', views.getAnswers, name='getAnswers'),
     path('ajax/applogin', views.applogin, name='applogin'),
     path('ajax/apiCategory', views.apiCategory, name='apiCategory'),
+    path('ajax/updateAnswer', views.updateAnswer, name='updateAnswer'),
+    
     
     path('api/', include(router.urls))
 ]
