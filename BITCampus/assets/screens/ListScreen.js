@@ -20,7 +20,9 @@ class List extends Component {
         this.props.navigation.addListener('didBlur', () => this.onBlur())
     }
     onFocus() {
-        this.FetchData()
+         setTimeout(() => {
+            this.FetchData()
+        }, 500)
     }
 
     onBlur() {
@@ -30,13 +32,14 @@ class List extends Component {
     }
 
 
+
     FetchData(){
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
                 userId: user[0]['id']
             }, function () {
-                return fetch('http://10.0.2.2:8000/ajax/apiCategory?id=' + this.state.userId)
+                return fetch('http://robinrichard.pythonanywhere.com/ajax/apiCategory?id=' + this.state.userId)
                     .then((response) => response.json())
                     .then((responseJson) => {
                         this.setState({

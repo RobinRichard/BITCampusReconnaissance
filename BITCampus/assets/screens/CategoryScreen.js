@@ -20,7 +20,7 @@ class Category extends Component {
     }
 
     onFocus() {
-        this.FetchData()
+            this.FetchData()
     }
 
     onBlur() {

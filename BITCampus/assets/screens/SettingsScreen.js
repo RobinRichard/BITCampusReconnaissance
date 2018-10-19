@@ -21,12 +21,26 @@ class Settings extends Component {
   }
 
   componentWillMount() {
-    AsyncStorage.getItem('user', (err, result) => {
-      this.setState({
-        isLoading: false,
-        dataSource: JSON.parse(result),
-      }, function () {
-        // alert(this.state.dataSource[0]['user_name']);
+      AsyncStorage.getItem('user', (err, result) => {
+            var user = JSON.parse(result)
+            this.setState({
+                userId: user[0]['id'],
+                // dataSource: JSON.parse(result),
+            },function () {
+        return fetch('http://robinrichard.pythonanywhere.com/ajax/getUserDetails?uid=' + this.state.userId)
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                        this.setState({
+                            dataSource: responseJson[0],
+                        }, function () {
+                            this.setState({
+                                isLoading: false,
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
       });
     });
   }
@@ -51,29 +65,31 @@ class Settings extends Component {
             <CardItem bordered>
               <Body>
                 <View style={styles.usercontainer}>
-                <Text style={styles.texttitle}>{this.state.dataSource[0]['user_name']}</Text>
+                <Text style={styles.texttitle}>{this.state.dataSource['user_name']}</Text>
                   <Avatar
                     xlarge
                     rounded
-                    source={require('../Images/user.png')}
+                    source={{uri: 'http://robinrichard.pythonanywhere.com'+this.state.dataSource['user_image']}}
+     
+                    
                     onPress={() => console.log("Works!")}
                     activeOpacity={0.7}
 
                   />
                   <View style={{ flexDirection: 'row', margin: 5 }}>
-                    <View style={styles.textcontainer} ><Text h4>#{this.state.dataSource[0]['user_rollno']} </Text></View>
+                    <View style={styles.textcontainer} ><Text h4>#{this.state.dataSource['user_rollno']} </Text></View>
                   </View>
                   <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text>{this.state.dataSource[0]['user_department']}</Text></View>
+                    <View style={styles.textcontainer} ><Text>{this.state.dataSource['user_department']}</Text></View>
                   </View>
                   <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="phone" /> {this.state.dataSource[0]['user_phone']}</Text></View>
+                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="phone" /> {this.state.dataSource['user_phone']}</Text></View>
                   </View>
                   <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="envelope" /> {this.state.dataSource[0]['user_mail']}</Text></View>
+                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: 'black', fontSize: 18 }} name="envelope" /> {this.state.dataSource['user_mail']}</Text></View>
                   </View>
                   <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text>Address : {this.state.dataSource[0]['user_address']}</Text></View>
+                    <View style={styles.textcontainer} ><Text>Address : {this.state.dataSource['user_address']}</Text></View>
                   </View>
 
                 </View>
