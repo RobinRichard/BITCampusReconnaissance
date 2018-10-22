@@ -210,10 +210,10 @@ class Gallery extends Component {
                             </Animated.View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <Animated.View style={[{ flex: 1, zIndex: 1000, backgroundColor: 'white', padding: 20, paddingTop: 50 }, animatedContentStyle]}>
+                    <Animated.ScrollView style={[{ flex: 1, zIndex: 1000, backgroundColor: 'white', padding: 20, paddingTop: 50 }, animatedContentStyle]}>
                         <Text style={{ fontSize: 24, paddingBottom: 10 }}>{this.state.activeImage==null?'':this.state.activeImage.file_name}</Text>
                         <Text>{this.state.activeImage==null?'':this.state.activeImage.description}</Text>
-                    </Animated.View>
+                    </Animated.ScrollView>
                 </View>
             </SafeAreaView>
         );
