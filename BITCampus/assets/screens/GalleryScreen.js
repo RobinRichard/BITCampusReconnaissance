@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, ScrollView, Image, TouchableWithoutFeedback,StatusBar, Animated, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image,ActivityIndicator, TouchableWithoutFeedback,StatusBar, Animated, Dimensions, SafeAreaView } from 'react-native';
 
 let SCREEN_WIDTH = Dimensions.get('window').width
 let SCREEN_HEIGHT = Dimensions.get('window').height
@@ -14,10 +14,13 @@ class Gallery extends Component {
     constructor() {
         super()
         this.state = {
+            isLoading: true,
             activeImage: null,
         }
     }
     componentWillMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => this.onFocus());
+        this._navListener = this.props.navigation.addListener('didBlur', () => this.onBlur())
         this.allImages = {}
         this.oldPosition = {}
         this.position = new Animated.ValueXY()
@@ -25,6 +28,38 @@ class Gallery extends Component {
         this.animation = new Animated.Value(0)
         this.activeImageStyle = null
     }
+
+    onFocus() {
+        this.FetchData()
+      }
+    
+      onBlur() {
+        this.setState({
+          isLoading: true,
+        });
+      }
+    
+      componentWillUnmount() {
+        this._navListener.remove()
+      }
+    
+      FetchData() {
+            return fetch(global.url + '/api/getGallery')
+              .then((response) => response.json())
+              .then((responseJson) => {
+                this.setState({
+                  imageSource: responseJson,
+                }, function () {
+                  this.setState({
+                    isLoading: false,
+                  });
+                });
+              })
+              .catch((error) => {
+                alert(error)
+              });
+          }
+    
 
     openImage = (index) => {
 
@@ -45,7 +80,7 @@ class Gallery extends Component {
             })
 
             this.setState({
-                activeImage: images[index],
+                activeImage: this.state.imageSource[index],
             }, () => {
                 this.viewImage.measure((dx, dy, dWidth, dHeight, dPageX, dPageY) => {
 
@@ -131,6 +166,14 @@ class Gallery extends Component {
         const animatedCrossOpacity = {
             opacity: this.animation
         }
+        if (this.state.isLoading) {
+            return (
+              <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+                <ActivityIndicator size="large" color="#004898" />
+              </View>
+            )
+          }
+          else {
         return (
             <SafeAreaView style={{ flex: 1}}>
                 <StatusBar backgroundColor='#00121f' barStyle='light-content' />
@@ -138,7 +181,7 @@ class Gallery extends Component {
                 <Image style={{height: 38,width: 40}} source={require('../Images/logo_small.png')}/><Text style={styles.stickySectionText}>OTAGO Polytechnic</Text>
               </View>
                 <ScrollView style={{ flex: 1 }}>
-                    {images.map((image, index) => {
+                    {this.state.imageSource.map((image, index) => {
                         return (
                             <TouchableWithoutFeedback
                                 onPress={() => this.openImage(index)}
@@ -146,7 +189,7 @@ class Gallery extends Component {
                                 <Animated.View style={{ height: SCREEN_HEIGHT - 150, width: SCREEN_WIDTH, padding: 15 }}>
                                     <Image
                                         ref={(image) => (this.allImages[index] = image)}
-                                        source={image.src}
+                                        source={{ uri: global.url +image.Actual_name}}
                                         style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 5 }}
                                     />
                                 </Animated.View>
@@ -157,7 +200,7 @@ class Gallery extends Component {
                 <View style={StyleSheet.absoluteFill} pointerEvents={this.state.activeImage ? "auto" : "none"}>
                     <View style={{ flex: 2, zIndex: 1001 }} ref={(view) => (this.viewImage = view)}>
                         <Animated.Image
-                            source={this.state.activeImage ? this.state.activeImage.src : null}
+                            source={this.state.activeImage ? { uri: global.url +this.state.activeImage.Actual_name} : null}
                             style={[{ resizeMode: 'cover', top: 0, left: 0, height: null, width: null }, activeImageStyle]}
                         >
                         </Animated.Image>
@@ -168,12 +211,13 @@ class Gallery extends Component {
                         </TouchableWithoutFeedback>
                     </View>
                     <Animated.View style={[{ flex: 1, zIndex: 1000, backgroundColor: 'white', padding: 20, paddingTop: 50 }, animatedContentStyle]}>
-                        <Text style={{ fontSize: 24, paddingBottom: 10 }}>Content here</Text>
-                        <Text>{this.state.activeImage==null?'':this.state.activeImage.content}</Text>
+                        <Text style={{ fontSize: 24, paddingBottom: 10 }}>{this.state.activeImage==null?'':this.state.activeImage.file_name}</Text>
+                        <Text>{this.state.activeImage==null?'':this.state.activeImage.description}</Text>
                     </Animated.View>
                 </View>
             </SafeAreaView>
         );
+    }
     }
 }
 export default Gallery;

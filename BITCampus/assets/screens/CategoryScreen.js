@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { View, ScrollView, AsyncStorage, StatusBar, ActivityIndicator, StyleSheet, SafeAreaView, TextInput, Platform, FlatList, TouchableOpacity, ProgressBarAndroid, ProgressViewIOS } from "react-native";
-import { Button, Icon, Container, Header, Content, Left } from 'native-base'
-import { Tile, Text } from 'react-native-elements';
+import { View,Image, ScrollView, AsyncStorage, StatusBar,  ActivityIndicator, StyleSheet, SafeAreaView, Platform, TouchableOpacity, ProgressBarAndroid, ProgressViewIOS } from "react-native";
+import {  Icon} from 'native-base'
+import { Text } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 
-const jsonData = require('../data/Reconnaissance.json');
 class Category extends Component {
 
     constructor(props) {
@@ -15,8 +14,8 @@ class Category extends Component {
 
     }
     componentWillMount() {
-        this.props.navigation.addListener('didFocus', () => this.onFocus())
-        this.props.navigation.addListener('didBlur', () => this.onBlur())
+        this._navListener = this.props.navigation.addListener('didFocus', () =>  this.onFocus());
+        this._navListener = this.props.navigation.addListener('didBlur', () => this.onBlur())
     }
 
     onFocus() {
@@ -29,9 +28,8 @@ class Category extends Component {
         });
     }
 
-    componentWillUnmount() {
-        this.props.navigation.removeListener('didFocus', () => this.onFocus())
-        this.props.navigation.removeListener('didBlur', () => this.onBlur())
+    componentWillUnmount(){
+        this._navListener.remove()
     }
 
     FetchData() {
@@ -40,7 +38,7 @@ class Category extends Component {
             this.setState({
                 userId: user[0]['id']
             }, function () {
-                return fetch('http://robinrichard.pythonanywhere.com/ajax/apiCategory?id=' + this.state.userId)
+                return fetch(global.url+'/api/getQuestions?id=' + this.state.userId)
                     .then((response) => response.json())
                     .then((responseJson) => {
                         this.setState({
@@ -71,11 +69,12 @@ class Category extends Component {
                 var answeredQues = 0
 
                 section.filter(data => data.category == item.id).map(function (sitem) {
-                    var flag = false
+                    var flag = []
                     question.filter(data => data.section == sitem.id).map(function (qitem) {
-                        flag = answer.filter(data => data.question == qitem.id && data.answer_status == 3).length == 1 ? true : false
+                        key = answer.filter(data => data.question == qitem.id && data.answer_status == 3).length == 1 ? 1 : 0
+                        flag.push(key)
                     })
-                    answeredQues += flag ? 1 : 0
+                    answeredQues += flag.filter(data => data == 0).length >= 1 ? 0 : 1
                 });
 
                 return (
@@ -87,7 +86,7 @@ class Category extends Component {
                                 <View style={{ flex: 1, alignItems: 'flex-end' }}><Text style={styles.buttonText}>{answeredQues} / {totalQues}</Text></View>
                             </View>
                             <View style={{ alignItems: 'center', flexDirection: 'row', marginBottom: 10, justifyContent: 'center', }}>
-                                <View style={{ flex: 4, alignItems: 'center' }}>
+                                <View style={{ flex: 4, alignItems: 'flex-end' }}>
                                     <View style={{ width: '80%' }}>
                                         {
                                             (Platform.OS === 'android')
@@ -98,7 +97,7 @@ class Category extends Component {
                                         }
                                     </View>
                                 </View>
-                                <View style={{ flex: 1 }}>
+                                <View style={{ flex: 1, alignItems: 'center' }}>
                                     <Text style={{ color: 'white' }}>{parseInt(((answeredQues / totalQues) * 100))} %</Text>
                                 </View>
                             </View>
@@ -109,8 +108,9 @@ class Category extends Component {
         }
         if (this.state.isLoading) {
             return (
-                <View style={{ flex: 1, padding: 20 }}>
-                    <ActivityIndicator />
+                <View style={{ flex: 1,backgroundColor: 'white', alignItems: 'center',justifyContent: 'center'}}>
+                    {/* <Image style={{height: 80,width: 80,margin:10}} source={require('../Images/logo_small.png')}/> */}
+                    <ActivityIndicator size="large" color="#004898" />
                 </View>
             )
         }
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     },
     TextContainer: {
         margin: 10,
-        padding: 20,
+        padding: 15,
         borderRadius: 5,
         flexDirection: 'row'
     },
