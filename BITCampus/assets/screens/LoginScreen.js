@@ -59,7 +59,6 @@ class Login extends Component {
       <KeyboardAvoidingView style={styles.container}>
         <Text style={styles.title}>Reconnaissance</Text>
         <Animated.Image source={require('../Icon/logo.png')} style={[styles.logo, { height: this.imageHeight }]} />
-        
         <LoginForm navigation={this.props.navigation} />
       </KeyboardAvoidingView>
     );

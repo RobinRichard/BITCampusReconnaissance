@@ -25,6 +25,7 @@ class LoginForm extends Component {
       });
   }
   render() {
+     const { navigate } = this.props.navigation;
     return (
       <View>
         <FormLabel>Email</FormLabel>
@@ -36,6 +37,14 @@ class LoginForm extends Component {
           backgroundColor="#004898"
           title="SIGN IN"
           onPress={this.checkLogin}
+        />
+        <Button
+          buttonStyle={{ marginTop: 10, padding: 20 }}
+          backgroundColor="#004898"
+          title="SIGN UP"
+          onPress={() =>
+          navigate('SignUp')
+        }
         />
       </View>
     );

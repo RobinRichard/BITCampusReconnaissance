@@ -3,6 +3,7 @@ import { Platform, StatusBar } from "react-native";
 import {
   StackNavigator,
   TabNavigator,
+  createStackNavigator,
   createSwitchNavigator,
   createBottomTabNavigator
 } from "react-navigation";
@@ -12,20 +13,24 @@ import Home from "./screens/HomeScreen";
 import Settings from './screens/SettingsScreen'
 import Campus from './screens/CampusScreen'
 import Gallery from './screens/GalleryScreen'
+
 import Login from './screens/LoginScreen'
+import Signup from './screens/SignupScreen'
 
-
-const headerStyle = {
-  marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-};
 
 export const SignedOut = StackNavigator({
-  SignLoginIn: {
+  SignIn: {
     screen: Login,
-    navigationOptions: {
-      header: null
-    }
+  },
+  SignUp: {
+    screen: Signup,
   }
+},
+  {
+   headerMode: 'none',
+    navigationOptions: {
+        headerVisible: false,
+    }
 });
 
 export const SignedIn = createBottomTabNavigator({
