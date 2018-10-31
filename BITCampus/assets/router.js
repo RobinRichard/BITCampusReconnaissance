@@ -16,6 +16,8 @@ import Gallery from './screens/GalleryScreen'
 
 import Login from './screens/LoginScreen'
 import Signup from './screens/SignupScreen'
+import Profile from './screens/ProfileScreen'
+
 
 
 export const SignedOut = StackNavigator({
@@ -24,6 +26,9 @@ export const SignedOut = StackNavigator({
   },
   SignUp: {
     screen: Signup,
+  },
+  Profile: {
+    screen: Profile,
   }
 },
   {

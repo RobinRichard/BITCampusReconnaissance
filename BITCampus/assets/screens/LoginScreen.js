@@ -4,8 +4,8 @@ import { Text } from "react-native-elements";
 import LoginForm from '../Components/LoginForm';
 
 const window = Dimensions.get('window');
-export const IMAGE_HEIGHT = window.width / 2;
-export const IMAGE_HEIGHT_SMALL = window.width / 4;
+export const IMAGE_HEIGHT = window.width / 3;
+export const IMAGE_HEIGHT_SMALL = window.width / 5;
 
 class Login extends Component {
   constructor(props) {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   title:{
     color:'#004898',
-    fontSize:20,
+    fontSize:26,
     fontWeight:'bold'
   }
 

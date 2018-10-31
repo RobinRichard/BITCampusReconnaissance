@@ -28,24 +28,24 @@ class LoginForm extends Component {
      const { navigate } = this.props.navigation;
     return (
       <View>
-        <FormLabel>Email</FormLabel>
-        <FormInput placeholder="Email address..." onChangeText={(uname) => this.setState({ uname })} />
-        <FormLabel>Password</FormLabel>
-        <FormInput secureTextEntry placeholder="Password..." onChangeText={(password) => this.setState({ password })} />
+        <FormInput containerStyle={{borderBottomWidth: 1}} placeholder="Email" onChangeText={(uname) => this.setState({ uname })} />
+        <FormInput containerStyle={{borderBottomWidth: 1,marginTop:15}}  secureTextEntry placeholder="Password" onChangeText={(password) => this.setState({ password })} />
+        <View style={{ flexDirection: 'row', padding: 10, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <Button
-          buttonStyle={{ marginTop: 10, padding: 20 }}
+          buttonStyle={{ marginTop: 20, padding: 15 }}
           backgroundColor="#004898"
           title="SIGN IN"
           onPress={this.checkLogin}
         />
         <Button
-          buttonStyle={{ marginTop: 10, padding: 20 }}
+          buttonStyle={{ marginTop: 20, padding: 15 }}
           backgroundColor="#004898"
           title="SIGN UP"
           onPress={() =>
           navigate('SignUp')
         }
         />
+      </View>
       </View>
     );
   }
