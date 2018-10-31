@@ -6,7 +6,11 @@ buildscript {
             url 'https://maven.google.com/'
             name 'Google'
         }
+<<<<<<< HEAD
          jcenter()
+=======
+        jcenter()
+>>>>>>> b20261e142df7bbe75a9f46ba8d75106c88da26d
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'

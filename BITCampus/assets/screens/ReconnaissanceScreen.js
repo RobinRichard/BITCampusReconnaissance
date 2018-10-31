@@ -94,7 +94,6 @@ class Reconnaissance extends Component {
         }
 
         onSuccess = (e, id, qr) => {
-            alert('val: ' + e + ' id: ' + id + ' qrdata :' + qr['data'])
             if (e == qr['data']) {
                 updateAnswer(id, 'QR code successfully Verified')
             }
@@ -220,7 +219,8 @@ class Reconnaissance extends Component {
                                 <QRCodeScanner
                                     cameraStyle={{ width: '80%', height: '80%', alignSelf: "center" }}
                                     onRead={this.onSuccess.bind(this, item.question_validation.toString(), item.id.toString())}
-                                    reactivate={true}
+                                    reactivate={true} 
+                                    reactivateTimeout={3000}
                                 />
                             : null}
 
