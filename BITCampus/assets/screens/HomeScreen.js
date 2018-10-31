@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, Image, WebView, ListView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, WebView, StyleSheet, Text, View } from 'react-native';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
@@ -14,6 +14,7 @@ class Home extends Component {
       require('../Images/campus5.jpg')]
     };
   }
+  
 
   render() {
     const { onScroll = () => { } } = this.props;

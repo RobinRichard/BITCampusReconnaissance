@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View,Image, ScrollView, AsyncStorage, StatusBar,  ActivityIndicator, StyleSheet, SafeAreaView, Platform, TouchableOpacity, ProgressBarAndroid, ProgressViewIOS } from "react-native";
+import { View , ScrollView, AsyncStorage, StatusBar,  ActivityIndicator, StyleSheet, SafeAreaView, Platform, TouchableOpacity, ProgressBarAndroid, ProgressViewIOS } from "react-native";
 import {  Icon} from 'native-base'
 import { Text } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
