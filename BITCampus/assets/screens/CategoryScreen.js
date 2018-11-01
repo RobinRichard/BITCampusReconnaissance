@@ -1,20 +1,21 @@
 import React, { Component } from "react";
-import { View,Image, ScrollView, AsyncStorage, StatusBar,  ActivityIndicator, StyleSheet, SafeAreaView, Platform, TouchableOpacity, ProgressBarAndroid, ProgressViewIOS } from "react-native";
-import {  Icon} from 'native-base'
+import { View, ScrollView, AsyncStorage, StatusBar, ActivityIndicator, StyleSheet, SafeAreaView, Platform, TouchableOpacity, ProgressBarAndroid, ProgressViewIOS } from "react-native";
+import { Icon } from 'native-base'
 import { Text } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
-
+import Modal from "react-native-modal";
 class Category extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             isLoading: true,
+            isModalVisible: true
         };
 
     }
     componentWillMount() {
-        this._navListener = this.props.navigation.addListener('didFocus', () =>  this.onFocus());
+        this._navListener = this.props.navigation.addListener('didFocus', () => this.onFocus());
         this._navListener = this.props.navigation.addListener('didBlur', () => this.onBlur())
     }
 
@@ -28,7 +29,7 @@ class Category extends Component {
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._navListener.remove()
     }
 
@@ -38,7 +39,7 @@ class Category extends Component {
             this.setState({
                 userId: user[0]['id']
             }, function () {
-                return fetch(global.url+'/api/getQuestions?id=' + this.state.userId)
+                return fetch(global.url + '/api/getQuestions?id=' + this.state.userId)
                     .then((response) => response.json())
                     .then((responseJson) => {
                         this.setState({
@@ -58,6 +59,7 @@ class Category extends Component {
             });
         });
     }
+   
     render() {
         if (!this.state.isLoading) {
             var section = this.state.sectionData
@@ -108,7 +110,7 @@ class Category extends Component {
         }
         if (this.state.isLoading) {
             return (
-                <View style={{ flex: 1,backgroundColor: 'white', alignItems: 'center',justifyContent: 'center'}}>
+                <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
                     {/* <Image style={{height: 80,width: 80,margin:10}} source={require('../Images/logo_small.png')}/> */}
                     <ActivityIndicator size="large" color="#004898" />
                 </View>
@@ -118,6 +120,28 @@ class Category extends Component {
             return (
                 <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                     <StatusBar backgroundColor='#00121f' barStyle='light-content' />
+                    <View>
+                        <Modal isVisible={this.state.isModalVisible}
+                            backdropOpacity={0}
+                            onBackdropPress={() => this.setState({ isModalVisible: false })}
+                            animationIn="slideInDown"
+                            animationOut="slideOutUp"
+                            animationInTiming={1000}
+                            animationOutTiming={1000}
+                            style={{ margin: -10 }}
+                        >
+                            <View style={{ top: 0, right: 0,overflow:'hidden',alignItems:'flex-end', position: 'absolute', backgroundColor:'#004898' , padding: 10, width: '90%', height: '50%', borderBottomLeftRadius: 600, borderTopLeftRadius: 10 }}>
+                                <ScrollView style={{margin:10}}>
+                                    <Text style={{height:30,fontSize:22, textAlign:'right',color: '#fff' }}>Reconnaissance</Text>
+                                    <Text style={{marginTop:10,width:300,textAlign:'right',color: '#fff' }}>You can explore the polutechnic campus and answer the simple questions about the campus in different categories given in this screen</Text> 
+                                    <Text style={{marginTop:10,width:300,textAlign:'right',color: '#fff' }}>Click on the categories to get all sections and explore one by one</Text>
+                                </ScrollView>
+                                <TouchableOpacity style={{right:20, position: 'absolute',bottom:10}} onPress={()=>this.setState({ isModalVisible: false })}>
+                                <Text style={{textAlign:'right',color: '#fff' }}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
+                    </View>
                     <View style={{ flex: 1 }}>
                         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#004898' }}>Reconnaissance</Text>

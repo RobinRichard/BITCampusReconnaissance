@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { View, StyleSheet, SafeAreaView, AsyncStorage, StatusBar, ActivityIndicator } from "react-native";
-import { Left, Right, CardItem, Body } from 'native-base';
-import { Card,Text, Avatar } from "react-native-elements";
-import { Icon } from 'native-base';
+import { View, StyleSheet, Alert, SafeAreaView, AsyncStorage, StatusBar, ActivityIndicator, Image } from "react-native";
+
+import { Container, Content, Header, Icon, Body, Right, Title } from 'native-base';
+
+import { Card, Text, Avatar } from "react-native-elements";
 
 import { onSignOut } from "../auth";
 
@@ -14,22 +15,23 @@ class Settings extends Component {
   }
 
   componentWillMount() {
-    this._navListener = this.props.navigation.addListener('didFocus', () => this.onFocus());
-    this._navListener = this.props.navigation.addListener('didBlur', () => this.onBlur())
-  }
-  onFocus() {
     this.FetchData()
+    // this._navListener = this.props.navigation.addListener('didFocus', () => this.onFocus());
+    // this._navListener = this.props.navigation.addListener('didBlur', () => this.onBlur())
   }
+  // onFocus() {
+  //   this.FetchData()
+  // }
 
-  onBlur() {
-    this.setState({
-      isLoading: true,
-    });
-  }
+  // onBlur() {
+  //   // this.setState({
+  //   //   isLoading: true,
+  //   // });
+  // }
 
-  componentWillUnmount() {
-    this._navListener.remove()
-  }
+  // componentWillUnmount() {
+  //   this._navListener.remove()
+  // }
 
   FetchData() {
     AsyncStorage.getItem('user', (err, result) => {
@@ -57,6 +59,19 @@ class Settings extends Component {
     });
   }
 
+  signout = () => {
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure You want to logout ?',
+      [
+        { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'Yes', onPress: () => onSignOut().then(() => this.props.navigation.navigate("SignedOut")) },
+      ],
+      { cancelable: false }
+    )
+
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -67,38 +82,58 @@ class Settings extends Component {
     }
     else {
       return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white', padding: 5 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
           <StatusBar backgroundColor='#00121f' barStyle='light-content' />
-          <Card title={this.state.dataSource['user_name']}> 
-              <View style={{ flex: 1, flexDirection: 'row', padding: 10, alignItems: 'center', justifyContent: 'center', }} >
-                  <Icon type="FontAwesome" style={{ color: 'black', fontSize: 22}} name="power-off" onPress={() => onSignOut().then(() => this.props.navigation.navigate("SignedOut"))} />
-              </View>
-                <View style={styles.usercontainer}>
-                  <Avatar
-                    xlarge
-                    rounded
-                    source={{ uri: global.url + this.state.dataSource['user_image'] }}
-                    onPress={() => console.log("Works!")}
-                    activeOpacity={0.7}
-                  />
-                  <View style={{ flexDirection: 'row', margin: 5 }}>
-                    <View style={styles.textcontainer} ><Text h4>#{this.state.dataSource['user_rollno']} </Text></View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text>{this.state.dataSource['user_department']}</Text></View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: '#004898', fontSize: 20 }} name="phone" /> <Text style={{marginLeft:10}}>{this.state.dataSource['user_phone']}</Text></Text></View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text><Icon type="FontAwesome" style={{ color: '#004898', fontSize: 20 }} name="envelope" /> <Text style={{marginLeft:15}}>{this.state.dataSource['user_mail']}</Text></Text></View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.textcontainer} ><Text>Address : {this.state.dataSource['user_address']}</Text></View>
-                  </View>
+          <Header androidStatusBarColor="#00121f" style={styles.headerStyle} >
+            <Body>
+              <Title>User Profile</Title>
+            </Body>
+            <Right><Icon type="FontAwesome" style={{ color: 'white', marginRight: 10 }} name="power-off" onPress={() => this.signout()} /></Right>
+          </Header>
 
+
+          <Card title={this.state.dataSource['user_name']}>
+            <View style={styles.usercontainer}>
+              <Avatar
+                xlarge
+                rounded
+                source={{ uri: global.url + this.state.dataSource['user_image'] }}
+                onPress={() => console.log("Works!")}
+                activeOpacity={0.7}
+              />
+              <View style={{ flexDirection: 'row', margin: 5 }}>
+                <View style={styles.textcontainer} ><Text h4>#{this.state.dataSource['user_rollno']} </Text></View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={styles.textcontainer} ><Text>{this.state.dataSource['user_department']}</Text></View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={styles.textcontainer} >
+                  <View style={{ flexDirection: 'row', padding: 10, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Icon type="FontAwesome" style={{ color: '#004898', fontSize: 20 }} name="phone" />
+                    <Text style={{ marginLeft: 10 }}>{this.state.dataSource['user_phone']}</Text>
+                  </View>
                 </View>
-                </Card>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={styles.textcontainer} >
+                  <View style={{ flexDirection: 'row', padding: 10, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Icon type="FontAwesome" style={{ color: '#004898', fontSize: 20 }} name="envelope" />
+                    <Text style={{ marginLeft: 15 }}>{this.state.dataSource['user_mail']}</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={styles.textcontainer} >
+                  <View style={{ flexDirection: 'row', padding: 10, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Icon type="FontAwesome" style={{ color: '#004898', fontSize: 20 }} name="map-marker" />
+                    <Text style={{ marginLeft: 15 }}>{this.state.dataSource['user_address']}</Text>
+                  </View>
+                </View>
+              </View>
+
+            </View>
+          </Card>
         </SafeAreaView>
       );
     }
@@ -119,7 +154,7 @@ const styles = StyleSheet.create({
     height: 35,
   },
   headerStyle: {
-    backgroundColor: '#e8630a'
+    backgroundColor: '#004898'
   },
   texttitle: {
     fontSize: 20,
@@ -129,4 +164,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10
   }
+
 });

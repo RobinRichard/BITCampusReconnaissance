@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Router, Scene, Actions } from 'react-native-router-flux';
+import { Router, Scene,Actions } from 'react-native-router-flux';
 import Category from './CategoryScreen';
 import List from './ListScreen';
 import Wizard from './WizardScreen';
@@ -7,10 +7,18 @@ import Reconnaissance from './ReconnaissanceScreen';
 
 class Campus extends Component {
 
+  
+  onBackPress = () => {
+    if (Actions.state.index === 0) {
+      this.props.navigation.navigate("Home")
+    }
+    Actions.pop()
+    return true 
+}
 
   render() {
     return (
-      <Router>
+      <Router backAndroidHandler={this.onBackPress}>
         <Scene key="root">
           <Scene key="Category"
             component={Category}
@@ -37,7 +45,7 @@ class Campus extends Component {
             titleStyle={{ color: '#004898' }}
             navigationBarStyle={{ backgroundColor: 'white' }}
           />
-           <Scene
+          <Scene
             key="Reconnaissance"
             component={Reconnaissance}
             title="Reconnaissance"

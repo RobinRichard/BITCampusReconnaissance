@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, Image, WebView, ListView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions,StatusBar, Image, WebView, StyleSheet, Text, View } from 'react-native';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
@@ -14,12 +14,14 @@ class Home extends Component {
       require('../Images/campus5.jpg')]
     };
   }
+  
 
   render() {
     const { onScroll = () => { } } = this.props;
 
     return (
       <ParallaxScrollView
+      
         onScroll={onScroll}
         headerBackgroundColor="#333"
         stickyHeaderHeight={STICKY_HEADER_HEIGHT}
@@ -60,6 +62,7 @@ class Home extends Component {
           </View>
         )}
       >
+      <StatusBar backgroundColor='#00121f' barStyle='light-content' />
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
             <WebView

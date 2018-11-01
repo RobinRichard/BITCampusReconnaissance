@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, ScrollView, StyleSheet, Button, SafeAreaView, TextInput, Text, Image, ToastAndroid, Dimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, SafeAreaView, TextInput, Text, Image, ToastAndroid, Dimensions } from 'react-native';
 import Stager, { Stage, StageButtons, StageProgress } from 'react-native-stager'
 import t from 'tcomb-form-native'; // 0.6.9
-import { Card, Avatar } from "react-native-elements";
+import { Card, Avatar,Button } from "react-native-elements";
 
 import ImagePicker from "react-native-image-picker";
 import RNFetchBlob from 'rn-fetch-blob';
@@ -114,7 +114,7 @@ class Signup extends Component {
                     {({ context }) => (
                         <View>
                             {/*<Button title="<" onPress={context.prev} />*/}
-                            <Button title={this.state.buttonText} onPress={() => this.HandleNext(context)} />
+                            <Button buttonStyle={{backgroundColor:'#004898'}}  title={this.state.buttonText} onPress={() => this.HandleNext(context)} />
                         </View>
                     )}
                 </StageButtons>
@@ -153,10 +153,6 @@ class Signup extends Component {
                 <Stage key="Profile" noPrevious>
                     {({ instance,context }) => (
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            {/*<Image style={{ width: 200, height: 400 }} source={this.state.imageSource != null ? this.state.imageSource :
-                                require('../Images/upload.png')}>
-                            </Image>*/}
-
                             <Avatar
                                 xlarge
                                 rounded

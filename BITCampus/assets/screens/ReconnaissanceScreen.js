@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Alert, Image, ImageBackground, TextInput, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, AsyncStorage, Linking } from "react-native";
+import { View, Alert,ScrollView, Image, ImageBackground, TextInput, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, AsyncStorage, Linking } from "react-native";
 import { Icon, Textarea, Button, Text, } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Swiper from 'react-native-swiper'
@@ -257,29 +257,27 @@ class Reconnaissance extends Component {
                             {controlList}
                         </Swiper>
                         <Modal isVisible={this.state.isModalVisible}
-                            onSwipe={() => this.setState({ isModalVisible: false })}
+                            backdropOpacity={0}
+                            onBackdropPress={() => this.setState({ isModalVisible: false })}
                             onBackButtonPress={() => this.setState({ isModalVisible: false })}
-                            swipeDirection="up"
                             animationIn="slideInDown"
                             animationOut="slideOutUp"
                             animationInTiming={1000}
-                            animationOutTiming={1000}>
-                            <View style={{ flex: 1 }}>
-                                <ImageBackground style={{ backgroundColor: '#ccc', flex: 1, width: '100%', height: '100%', justifyContent: 'center'}}
-                                    source={require('../Images/popupbg.jpg')}>
-                                    <TouchableOpacity
-                                        activeOpacity={0.5}
-                                        style={styles.TouchableOpacity_Style}
-                                        onPress={() => this.setState({ isModalVisible: false })} >
-                                        <Icon type="FontAwesome" style={{ fontSize: 20, color: 'black' }} name="times" />
-                                    </TouchableOpacity>
-                                    <Text style={{backgroundColor: 'transparent', textAlign: 'center',fontSize: 16, padding: 10,}}>
-                                        {this.state.description}
-                                    </Text>
-                                </ImageBackground>
-
+                            animationOutTiming={1000}
+                            style={{ margin: -10 }}
+                        >
+                            <View style={{ top: 0, right: 0, overflow: 'hidden', alignItems: 'flex-end', position: 'absolute', backgroundColor: '#004898', padding: 10, width: '90%', height: '50%', borderBottomLeftRadius: 600, borderTopLeftRadius: 10 }}>
+                                <ScrollView style={{ margin: 10 }}>
+                                    <Text style={{ height: 30, fontSize: 22, textAlign: 'right', color: '#fff' }}>Description</Text>
+                                    <Text style={{ marginTop: 10, width: 300, textAlign: 'right', color: '#fff' }}>{this.state.description} </Text>
+                                </ScrollView>
+                                <TouchableOpacity style={{ right: 20, position: 'absolute', bottom: 10 }} onPress={() => this.setState({ isModalVisible: false })}>
+                                    <Text style={{ textAlign: 'right', color: '#fff' }}>Close</Text>
+                                </TouchableOpacity>
                             </View>
                         </Modal>
+
+                      
                     </MenuContext>
                 </SafeAreaView>
             );
