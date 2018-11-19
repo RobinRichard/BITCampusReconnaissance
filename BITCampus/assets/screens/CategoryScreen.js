@@ -37,7 +37,7 @@ class Category extends Component {
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
-                userId: user[0]['id']
+                userId: user['id']
             }, function () {
                 return fetch(global.url + '/api/getQuestions?id=' + this.state.userId)
                     .then((response) => response.json())
@@ -65,6 +65,7 @@ class Category extends Component {
             var section = this.state.sectionData
             var question = this.state.questionData
             var answer = this.state.answerData
+            var qcount
             CategoryList = this.state.categoryData.map(function (item) {
 
                 var totalQues = section.filter(data => data.category == item.id).length
@@ -72,13 +73,14 @@ class Category extends Component {
 
                 section.filter(data => data.category == item.id).map(function (sitem) {
                     var flag = []
+                    qcount =   question.filter(data => data.section == sitem.id).length          
                     question.filter(data => data.section == sitem.id).map(function (qitem) {
                         key = answer.filter(data => data.question == qitem.id && data.answer_status == 3).length == 1 ? 1 : 0
                         flag.push(key)
                     })
                     answeredQues += flag.filter(data => data == 0).length >= 1 ? 0 : 1
                 });
-
+             if(qcount>0){
                 return (
                     <TouchableOpacity key={item.id} style={styles.imgContainer} onPress={() => Actions.List({ category_id: item.id, category: item.category_name, date: new Date().getTime() })}>
                         <View style={{ backgroundColor: item.category_color, borderRadius: 5 }}>
@@ -106,12 +108,12 @@ class Category extends Component {
                         </View>
                     </TouchableOpacity>
                 );
+             }
             });
         }
         if (this.state.isLoading) {
             return (
                 <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
-                    {/* <Image style={{height: 80,width: 80,margin:10}} source={require('../Images/logo_small.png')}/> */}
                     <ActivityIndicator size="large" color="#004898" />
                 </View>
             )
@@ -126,8 +128,8 @@ class Category extends Component {
                             onBackdropPress={() => this.setState({ isModalVisible: false })}
                             animationIn="slideInDown"
                             animationOut="slideOutUp"
-                            animationInTiming={1000}
-                            animationOutTiming={1000}
+                            animationInTiming={500}
+                            animationOutTiming={500}
                             style={{ margin: -10 }}
                         >
                             <View style={{ top: 0, right: 0,overflow:'hidden',alignItems:'flex-end', position: 'absolute', backgroundColor:'#004898' , padding: 10, width: '90%', height: '50%', borderBottomLeftRadius: 600, borderTopLeftRadius: 10 }}>

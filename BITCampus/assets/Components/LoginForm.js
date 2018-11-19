@@ -13,10 +13,13 @@ class LoginForm extends Component {
     return fetch(global.url + '/api/applogin?uname=' + this.state.uname + '&password=' + this.state.password)
       .then((response) => response.json())
       .then((responseJson) => {
-        if (responseJson.length != 0) {
-          AsyncStorage.setItem('user', JSON.stringify(responseJson)).then(() => { onSignIn().then(() => this.props.navigation.navigate("SignedIn")); })
+        if(responseJson['status']==1){
+          AsyncStorage.setItem('user', JSON.stringify(responseJson['dats'])).then(() => { onSignIn().then(() => this.props.navigation.navigate("SignedIn")); })
         }
-        else {
+        if(responseJson['status']==2){
+          alert('Activate your account by cliking the link send to your email')
+        }
+        if(responseJson['status']==0){
           alert('Invalid username or password')
         }
       })

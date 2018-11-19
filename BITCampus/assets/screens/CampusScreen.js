@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Router, Scene,Actions } from 'react-native-router-flux';
+import {BackHandler, View, Dimensions, Animated, TouchableOpacity, Text} from 'react-native';
 import Category from './CategoryScreen';
 import List from './ListScreen';
 import Wizard from './WizardScreen';
@@ -10,7 +11,8 @@ class Campus extends Component {
   
   onBackPress = () => {
     if (Actions.state.index === 0) {
-      this.props.navigation.navigate("Home")
+      BackHandler.exitApp();
+      // this.props.navigation.navigate("Home")
     }
     Actions.pop()
     return true 

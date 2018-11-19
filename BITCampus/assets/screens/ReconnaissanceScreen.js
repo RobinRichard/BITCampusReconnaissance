@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Alert,ScrollView, Image, ImageBackground, TextInput, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, AsyncStorage, Linking } from "react-native";
+import { View, Alert, ScrollView, KeyboardAvoidingView, Image, ImageBackground, TextInput, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator, AsyncStorage, Linking } from "react-native";
 import { Icon, Textarea, Button, Text, } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Swiper from 'react-native-swiper'
@@ -33,44 +33,46 @@ class Reconnaissance extends Component {
 
     componentWillMount() {
         Actions.Reconnaissance({ title: this.props.title })
-        this.FetchData()
+        AsyncStorage.getItem('user', (err, result) => {
+            var user = JSON.parse(result)
+            this.setState({
+                userId: user['id']
+            }, function () {
+                this.FetchData()
+            })
+        });
     }
 
 
     FetchData() {
-        AsyncStorage.getItem('user', (err, result) => {
-            var user = JSON.parse(result)
-            this.setState({
-                userId: user[0]['id']
-            }, function () {
-                return fetch(global.url + '/api/getQuestions?id=' + this.state.userId)
-                    .then((response) => response.json())
-                    .then((responseJson) => {
-                        this.setState({
-                            questionData: responseJson['qusetion'].filter(data => data.section == this.props.section_id),
-                            answerData: responseJson['answers'],
-                            answerstatedata: responseJson['answers']
-                        }, function () {
-                            var answerdata = this.state.answerData;
-                            var answerJson = {}
-                            this.state.questionData.map(function (item) {
-                                var key = item.id
-                                if (answerdata.filter(data => data.question == item.id).length > 0)
-                                    answerJson[key] = answerdata.filter(data => data.question == item.id)[0]['answer_text']
-                            })
 
-                            this.setState({
-                                isLoading: false,
-                                answers: answerJson
-                            });
-
-                        });
+        return fetch(global.url + '/api/getQuestions?id=' + this.state.userId)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    questionData: responseJson['qusetion'].filter(data => data.section == this.props.section_id),
+                    answerData: responseJson['answers'],
+                    answerstatedata: responseJson['answers']
+                }, function () {
+                    var answerdata = this.state.answerData;
+                    var answerJson = {}
+                    this.state.questionData.map(function (item) {
+                        var key = item.id
+                        if (answerdata.filter(data => data.question == item.id).length > 0)
+                            answerJson[key] = answerdata.filter(data => data.question == item.id)[0]['answer_text']
                     })
-                    .catch((error) => {
-                        alert(error)
+
+                    this.setState({
+                        isLoading: false,
+                        answers: answerJson
                     });
+
+                });
+            })
+            .catch((error) => {
+                alert(error)
             });
-        });
+
     }
 
     render() {
@@ -103,7 +105,12 @@ class Reconnaissance extends Component {
         }
 
         submitAns = (id) => {
-            updateAnswer(id, this.state.answers[id])
+            if (this.state.answers[id] !== undefined && this.state.answers[id].trim() !== '') {
+                updateAnswer(id, this.state.answers[id])
+            }
+            else {
+                alert('Please enter your answer')
+            }
         }
 
 
@@ -112,7 +119,7 @@ class Reconnaissance extends Component {
                 this.setState({ isModalVisible: !this.state.isModalVisible, description: value.data });
             }
             if (value.menu == 2) {
-                obj=JSON.parse(value.data)
+                obj = JSON.parse(value.data)
                 Alert.alert(
                     'Sure',
                     'Do you want to reset your answers?',
@@ -126,7 +133,7 @@ class Reconnaissance extends Component {
                                         alert(responseJson['status'])
                                     })
                                     .catch((error) => {
-                                        alert('Error : '+error)
+                                        alert('Error : ' + error)
                                     });
                             }
                         }, { text: 'No', style: 'cancel' }
@@ -142,7 +149,7 @@ class Reconnaissance extends Component {
                 if (supported) {
                     Linking.openURL(url);
                     updateAnswer(id, 'Link visted')
-                    Actions.pop()
+                    // Actions.pop()
                 } else {
                     alert("Invalid URL : " + url);
                 }
@@ -172,26 +179,26 @@ class Reconnaissance extends Component {
                                         </View>
                                     </MenuOption>
                                     {answerstate.filter(data => data.question == item.id && data.answer_status == 3).length == 1 ?
-                                        <MenuOption value={{ menu: 2, data: JSON.stringify(answerstate.filter(data => data.question == item.id))}}>
+                                        <MenuOption value={{ menu: 2, data: JSON.stringify(answerstate.filter(data => data.question == item.id)) }}>
                                             <View style={{ flex: 1, flexDirection: 'row', padding: 5 }}>
                                                 <Icon type="FontAwesome" style={{ fontSize: 20, color: '#004898' }} name="refresh" />
                                                 <Text style={{ marginLeft: 10, color: '#004898' }}> Reset Answer</Text>
                                             </View>
-                                        </MenuOption> : 
-                                        <MenuOption disabled={true} value={{ menu: 2, data: JSON.stringify(answerstate.filter(data => data.question == item.id))}}>
-                                        <View style={{ flex: 1, flexDirection: 'row', padding: 5 }}>
-                                            <Icon type="FontAwesome" style={{ fontSize: 20, color: '#bcbab8' }} name="refresh" />
-                                            <Text style={{ marginLeft: 10, color: '#bcbab8' }}> Reset Answer</Text>
-                                        </View>
-                                    </MenuOption>
-                                        
+                                        </MenuOption> :
+                                        <MenuOption disabled={true} value={{ menu: 2, data: JSON.stringify(answerstate.filter(data => data.question == item.id)) }}>
+                                            <View style={{ flex: 1, flexDirection: 'row', padding: 5 }}>
+                                                <Icon type="FontAwesome" style={{ fontSize: 20, color: '#bcbab8' }} name="refresh" />
+                                                <Text style={{ marginLeft: 10, color: '#bcbab8' }}> Reset Answer</Text>
+                                            </View>
+                                        </MenuOption>
+
                                     }
                                 </MenuOptions>
                             </Menu>
 
-                            <View style={{ paddingTop: 50 }}>
+                            <View style={{ paddingTop: 45 }}>
                                 <View style={{ borderTopWidth: 1, borderTopColor: '#e6e6fa' }}>
-                                    <Text style={{ marginTop: 10 }}>{item.question_text}</Text>
+                                    <Text style={{ marginTop: 5 }}>{item.question_text}</Text>
 
                                 </View>
                             </View>
@@ -203,11 +210,14 @@ class Reconnaissance extends Component {
                                     <Text>Already finished on {Moment(item.answer_date).format('lll')}</Text>
                                     <Text style={{ marginTop: 20 }}>Your Answer : {answertemp[item.id]}</Text>
                                 </View> :
-                                <View style={{ width: '100%', padding: 20, marginTop: 10 }}>
-                                    <Textarea onChangeText={(text) => handleChange(text, item.id)} value={answertemp[item.id]} style={{ width: '85%', alignSelf: "center" }} rowSpan={5} bordered placeholder="Textarea" />
-                                    <TouchableOpacity>
-                                        <Button style={{ alignSelf: "center", marginTop: 50 }} success onPress={() => submitAns(item.id)} ><Text>Submit </Text></Button>
-                                    </TouchableOpacity>
+
+                                <View style={{ width: '100%', paddingLeft: 20, paddingRight: 20, marginTop: 10 }}>
+                                    <KeyboardAvoidingView>
+                                        <Textarea onChangeText={(text) => handleChange(text, item.id)} value={answertemp[item.id]} style={{ width: '85%', alignSelf: "center" }} rowSpan={4} bordered placeholder="Textarea" />
+                                        <TouchableOpacity>
+                                            <Button style={{ alignSelf: "center", marginTop: 10 }} success onPress={() => submitAns(item.id)} ><Text>Submit </Text></Button>
+                                        </TouchableOpacity>
+                                    </KeyboardAvoidingView>
                                 </View>
                             : null}
 
@@ -219,7 +229,7 @@ class Reconnaissance extends Component {
                                 <QRCodeScanner
                                     cameraStyle={{ width: '80%', height: '80%', alignSelf: "center" }}
                                     onRead={this.onSuccess.bind(this, item.question_validation.toString(), item.id.toString())}
-                                    reactivate={true} 
+                                    reactivate={true}
                                     reactivateTimeout={3000}
                                 />
                             : null}
@@ -230,7 +240,7 @@ class Reconnaissance extends Component {
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, marginTop: 20 }}>
                                     <Text>Already finished on {Moment(item.answer_date).format('lll')}</Text>
                                 </View> :
-                                <View style={{ width: '100%', padding: 20, marginTop: 10 }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', padding: 20, marginTop: 50 }}>
                                     <TouchableOpacity>
                                         <Button success onPress={() => openLink(item.question_validation, item.id.toString())} ><Text>Open Link </Text></Button>
                                     </TouchableOpacity></View> : null}
@@ -262,8 +272,8 @@ class Reconnaissance extends Component {
                             onBackButtonPress={() => this.setState({ isModalVisible: false })}
                             animationIn="slideInDown"
                             animationOut="slideOutUp"
-                            animationInTiming={1000}
-                            animationOutTiming={1000}
+                            animationInTiming={500}
+                            animationOutTiming={500}
                             style={{ margin: -10 }}
                         >
                             <View style={{ top: 0, right: 0, overflow: 'hidden', alignItems: 'flex-end', position: 'absolute', backgroundColor: '#004898', padding: 10, width: '90%', height: '50%', borderBottomLeftRadius: 600, borderTopLeftRadius: 10 }}>
@@ -276,8 +286,6 @@ class Reconnaissance extends Component {
                                 </TouchableOpacity>
                             </View>
                         </Modal>
-
-                      
                     </MenuContext>
                 </SafeAreaView>
             );

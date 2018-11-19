@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { View, ScrollView, StyleSheet, SafeAreaView, TextInput, Text, Image, ToastAndroid, Dimensions } from 'react-native';
+import { View, Alert, ScrollView, StyleSheet, SafeAreaView, TextInput, Text, Image, ToastAndroid, Dimensions, ActivityIndicator } from 'react-native';
 import Stager, { Stage, StageButtons, StageProgress } from 'react-native-stager'
 import t from 'tcomb-form-native'; // 0.6.9
-import { Card, Avatar,Button } from "react-native-elements";
+import { Card, Avatar, Button } from "react-native-elements";
 
-import ImagePicker from "react-native-image-picker";
-import RNFetchBlob from 'rn-fetch-blob';
 const window = Dimensions.get('window');
 
 const Form = t.form.Form;
@@ -40,13 +38,14 @@ const UserDetails = t.struct({
     Roll: t.Number,
     Phone: t.Number,
     Address: t.String,
+
 });
 
 const UserRegister = t.struct({
     Name: t.String,
     Email: Email,
     Password: t.String,
-    ConfirmPassword: t.String
+    ConfirmPassword: t.String,
 });
 
 
@@ -65,7 +64,6 @@ const optionsreg = {
         }
     },
     stylesheet: formStyles
-    // stylesheet: formStyles,
 };
 const optionsupdate = {
     auto: 'placeholders',
@@ -73,12 +71,7 @@ const optionsupdate = {
     stylesheet: formStyles,
 };
 
-const imgpickeroptions = {
-    title: 'Select Photo',
-    takePhotoButtonTitle: "Take a photo",
-    chooseFromLibraryButtonTitle: "Choose from gallery ",
-    quality: 1
-};
+
 class Signup extends Component {
     constructor(props) {
         super(props)
@@ -89,8 +82,7 @@ class Signup extends Component {
             custom: true,
             buttonText: 'SignUp',
             uid: null,
-            imageSource: null,
-            data: null
+            isLoading: false,
         }
     }
 
@@ -114,7 +106,7 @@ class Signup extends Component {
                     {({ context }) => (
                         <View>
                             {/*<Button title="<" onPress={context.prev} />*/}
-                            <Button buttonStyle={{backgroundColor:'#004898'}}  title={this.state.buttonText} onPress={() => this.HandleNext(context)} />
+                            <Button buttonStyle={{ backgroundColor: '#004898' }} title={this.state.buttonText} onPress={() => this.HandleNext(context)} />
                         </View>
                     )}
                 </StageButtons>
@@ -136,10 +128,7 @@ class Signup extends Component {
                     )}
                 </Stage>
 
-                <Stage
-                    key="Details"
-                    noPrevious
-                >
+                <Stage key="Details">
                     {({ instance, context }) => (
                         <View style={styles.container}>
                             <Form
@@ -150,31 +139,6 @@ class Signup extends Component {
                         </View>
                     )}
                 </Stage>
-                <Stage key="Profile" noPrevious>
-                    {({ instance,context }) => (
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Avatar
-                                xlarge
-                                rounded
-                                source={this.state.imageSource != null ? require('../Images/user.png') :
-                                    require('../Images/upload.png')}
-                                onPress={() => this.selectPhoto(instance)}
-                                activeOpacity={0.7}
-                            />
-
-                            <Button onPress={() => this.uploadPhoto()} style={{ margin: 5 }} title='Upload' />
-                            <View style={{ flexDirection: 'row', padding: 10, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-
-                                {this.state.imageSource == null ? <Button onPress={() => this.selectPhoto(instance)} style={{ margin: 5 }} title='Select' /> : null}
-
-                                {this.state.imageSource != null ? <Button onPress={() => this.RemovePhoto()} style={{ margin: 5 }} title='Clear' /> : null}
-
-                                {this.state.imageSource != null ? <Button onPress={() => this.uploadPhoto()} style={{ margin: 5 }} title='Upload' /> : null}
-                            </View>
-                        </View>
-                    )}
-                </Stage>
-
             </Stager>
         )
     }
@@ -186,30 +150,24 @@ class Signup extends Component {
         if (context.currentStage() == 'Details') {
             this.handleUpdate(context)
         }
-        if (context.currentStage() == 'Profile') {
-            this.props.navigation.navigate("SignIn")
-            alert('Registration Finished')
-        }
+
     }
     handleRegistation = (context) => {
+        this.setState({
+            Regvalue: this.reg_form.getValue()
+        })
         const value = this.reg_form.getValue();
         if (value) {
             if (value.Password == value.ConfirmPassword) {
-                return fetch(global.url + '/api/addUser?type=reg&user_name=' + value.Name + '&user_mail=' + value.Email + '&user_password=' + value.Password)
+                return fetch(global.url + '/api/addUser?type=check&user_mail=' + value.Email)
                     .then((response) => response.json())
                     .then((responseJson) => {
                         if (responseJson['status'] == 1) {
-                            this.setState({
-                                uid: responseJson['user_id']
-                            })
-                            this.state.buttonText = "Add Details"
+                            this.state.buttonText = "Sign Up"
                             context.next()
                         }
                         if (responseJson['status'] == 0) {
                             alert('Email already exist')
-                        }
-                        if (responseJson['status'] == 2) {
-                            alert('Registration Failed')
                         }
                     })
                     .catch((error) => {
@@ -223,79 +181,59 @@ class Signup extends Component {
     }
 
     handleUpdate = (context) => {
-        const value = this.det_form.getValue();
-        return fetch(global.url + '/api/addUser?type=update&user_department=' + value.Course + '&user_rollno=' + value.Roll + '&user_phone=' + value.Phone + '&user_address=' + value.Address + '&user_id=' + this.state.uid)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                if (responseJson['status'] == 1) {
-                    this.state.buttonText = "Skip"
-                    this.props.navigation.navigate("Profile", { id: this.state.uid })
-                    // context.next()
-                }
-                if (responseJson['status'] == 0) {
-                    alert('Failed to save')
-                }
-            })
-            .catch((error) => {
-                alert('Error:' + error)
-            });
-    }
-
-    selectPhoto = (instance) => {
-        ImagePicker.showImagePicker(imgpickeroptions, (response) => {
-            if (response.error) {
-                alert('ImagePicker Error : ' + response.error)
+        this.setState({
+            isLoading : true,
+        })
+        const value = this.state.Regvalue//this.reg_form.getValue();
+        const value2 = this.det_form.getValue();
+        if (value2) {
+            if (value.Password == value.ConfirmPassword) {
+                this.props.navigation.navigate("Profile", { pd:value,ld:value2 })
+                // return fetch(global.url + '/api/addUser?type=reg&user_name=' + value.Name + '&user_mail=' + value.Email + '&user_password=' + value.Password + '&user_department=' + value2.Course + '&user_rollno=' + value2.Roll + '&user_phone=' + value2.Phone + '&user_address=' + value2.Address)
+                //     .then((response) => response.json())
+                //     .then((responseJson) => {
+                //         if (responseJson['status'] == 1) {
+                //             Alert.alert(
+                //                 'Registration Finished',
+                //                 'Please activate your account by click on the link sent to your email.\n To add profile picture press continue or skip to sign in',
+                //                 [
+                //                     { text: 'Skip', onPress: () => this.props.navigation.navigate("SignIn"), style: 'cancel' },
+                //                     { text: 'Continue', onPress: () => this.props.navigation.navigate("Profile", { id: responseJson['user_id'] }), style: 'ok' },
+                //                 ],
+                //                 { cancelable: false }
+                //             )
+                //         }
+                //         if (responseJson['status'] == 0) {
+                //             alert('Failed to save')
+                //         }
+                //     })
+                //     .catch((error) => {
+                //         alert('Error:' + error)
+                //     });
             }
             else {
-                let source = { uri: response.uri };
-                this.setState({
-                    imageSource: source,
-                    data: response.data,
-                    filetype: response.type,
-                    filename: response.fileName,
-                }, instance.refresh);
+                alert("password missmatch")
             }
-        });
-
+        }
     }
 
-    uploadPhoto = () => {
 
-        RNFetchBlob.fetch('POST', global.url + '/api/apiUpload', {
-            Authorization: "Bearer access-token",
-            otherHeader: "foo",
-            'Content-Type': 'multipart/form-data',
-        }, [
-                { name: 'profile', filename: this.state.filename, type: this.state.filetype, data: this.state.data },
-                { name: 'user_id', data: this.state.uid.toString() }
-
-            ]).then((resp) => {
-                resdata = JSON.parse(resp['data'])
-                if (resdata['status'] == 1) {
-                    this.props.navigation.navigate("SignIn")
-                    alert('Registration Finished')
-                }
-                if (resdata['status'] == 0) {
-                    alert('Erroro while uploading image')
-                }
-            }).catch((err) => {
-                alert('Server error : ' + err)
-            })
-
-    }
-
-    RemovePhoto = () => {
-        this.setState({
-            imageSource: null
-        })
-    }
 
     render() {
-        return (
-            <ScrollView style={styles.scrollcontainer}>
-                {this.getType()}
-            </ScrollView>
-        );
+        if (this.state.isLoading) {
+            return (
+                <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color="#004898" />
+                </View>
+            )
+        }
+        else {
+            return (
+                <ScrollView style={styles.scrollcontainer}>
+                    {this.getType()}
+                </ScrollView>
+            );
+        }
     }
 }
 export default Signup;

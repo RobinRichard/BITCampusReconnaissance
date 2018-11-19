@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, AsyncStorage, Animated, Dimensions, KeyboardAvoidingView, Keyboard, Platform, ActivityIndicator } from "react-native";
 import { Text, Button, FormLabel, FormInput } from "react-native-elements";
-import LoginForm from '../Components/LoginForm';
 import { onSignIn } from "../auth";
 const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 3;
@@ -67,12 +66,16 @@ class Login extends Component {
       return fetch(global.url + '/api/applogin?uname=' + this.state.uname + '&password=' + this.state.password)
         .then((response) => response.json())
         .then((responseJson) => {
-
-          if (responseJson.length != 0) {
-            AsyncStorage.setItem('user', JSON.stringify(responseJson)).then(() => { onSignIn().then(() => this.props.navigation.navigate("SignedIn")); })
+          if (responseJson['status'] == 1) {
+            AsyncStorage.setItem('user', JSON.stringify(responseJson['data'])).then(() => { onSignIn().then(() => this.props.navigation.navigate("SignedIn")); })
           }
           else {
-            alert('Invalid username or password')
+            if (responseJson['status'] == 2) {
+              alert('Activate your account by cliking the link send to your email')
+            }
+            if (responseJson['status'] == 0) {
+              alert(responseJson['data'])
+            }
             this.setState({
               isLoading: false,
             });
@@ -102,7 +105,6 @@ class Login extends Component {
         <KeyboardAvoidingView style={styles.container}>
           <Text style={styles.title}>Reconnaissance</Text>
           <Animated.Image source={require('../Icon/logo.png')} style={[styles.logo, { height: this.imageHeight }]} />
-          {/*<LoginForm navigation={this.props.navigation} />*/}
           <View>
             <FormInput containerStyle={{ borderBottomWidth: 1 }} placeholder="Email" onChangeText={(uname) => this.setState({ uname })} />
             <FormInput containerStyle={{ borderBottomWidth: 1, marginTop: 15 }} secureTextEntry placeholder="Password" onChangeText={(password) => this.setState({ password })} />

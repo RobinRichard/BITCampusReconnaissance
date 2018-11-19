@@ -11,7 +11,7 @@ class List extends Component {
         this.state = {
             isLoading: true,
             flag: false,
-            isModalVisible: true
+            isModalVisible: false
         };
     }
 
@@ -31,6 +31,7 @@ class List extends Component {
     }
 
     componentWillUnmount() {
+
         this._navListener.remove()
     }
 
@@ -38,7 +39,7 @@ class List extends Component {
         AsyncStorage.getItem('user', (err, result) => {
             var user = JSON.parse(result)
             this.setState({
-                userId: user[0]['id']
+                userId: user['id']
             }, function () {
                 return fetch(global.url + '/api/getQuestions?id=' + this.state.userId)
                     .then((response) => response.json())
@@ -61,6 +62,9 @@ class List extends Component {
         });
     }
 
+    modalClose = () => {
+        this.setState({ isModalVisible: false })
+    }
     getIcon(id) {
         var answer = this.state.answerData
         var flagtemp = []
@@ -86,11 +90,11 @@ class List extends Component {
                     <View>
                         <Modal isVisible={this.state.isModalVisible}
                             backdropOpacity={0}
-                            onBackdropPress={() => this.setState({ isModalVisible: false })}
+                            onBackdropPress={() => this.modalClose()}
                             animationIn="slideInDown"
                             animationOut="slideOutUp"
-                            animationInTiming={1000}
-                            animationOutTiming={1000}
+                            animationInTiming={500}
+                            animationOutTiming={500}
                             style={{ margin: -10 }}
                         >
                             <View style={{ top: 0, right: 0, overflow: 'hidden', alignItems: 'flex-end', position: 'absolute', backgroundColor: '#004898', padding: 10, width: '90%', height: '50%', borderBottomLeftRadius: 600, borderTopLeftRadius: 10 }}>
@@ -99,7 +103,7 @@ class List extends Component {
                                     <Text style={{ marginTop: 10, width: 300, textAlign: 'right', color: '#fff' }}>This section contains one or more question about {this.props.category}. Each may ask you to write or do something to make you clear all about {this.props.category} in this campus </Text>
                                     <Text style={{ marginTop: 10, width: 300, textAlign: 'right', color: '#fff' }}>Click on the sections to get all questions</Text>
                                 </ScrollView>
-                                <TouchableOpacity style={{ right: 20, position: 'absolute', bottom: 10 }} onPress={() => this.setState({ isModalVisible: false })}>
+                                <TouchableOpacity style={{ right: 20, position: 'absolute', bottom: 10 }} onPress={() => this.modalClose()}>
                                     <Text style={{ textAlign: 'right', color: '#fff' }}>Close</Text>
                                 </TouchableOpacity>
                             </View>

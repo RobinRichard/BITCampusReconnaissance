@@ -37,7 +37,7 @@ class Settings extends Component {
     AsyncStorage.getItem('user', (err, result) => {
       var user = JSON.parse(result)
       this.setState({
-        userId: user[0]['id'],
+        userId: user['id'],
       }, function () {
         return fetch(global.url + '/api/getUserDetails?uid=' + this.state.userId)
           .then((response) => response.json())
