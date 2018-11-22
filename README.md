@@ -224,9 +224,9 @@ Password: 123
 
 ## Screenshots
 
-<img src="/Screenshots/django1.PNG" width="800" height="550" />
+<img src="/Documentaion/django1.PNG" width="800" height="550" />
 <br><br>
-<img src="/Screenshots/django2.PNG" width="800" height="550" />
+<img src="/Documentaion/django2.PNG" width="800" height="550" />
 
 <p><strong>Functionalities of the client-side mobile application:</strong></p>
 <p>The table below describes the functionalities of various screens in client-side mobile application, which will be used by student to finish the reconnaissance.</p>
@@ -351,7 +351,7 @@ Password: 123
 
 ## Screenshots
 
-<img src="/Screenshots/react.PNG" width="800" height="550" />
+<img src="/Documentaion/react.PNG" width="800" height="550" />
 
 ## Built With
 
