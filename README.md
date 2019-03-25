@@ -36,9 +36,6 @@ recorded in the database.
 3.	python manage.py runserver
 
 The server will run on http://127.0.0.1:8000
-Login Credentials:
-User name: admin
-Password: 123 
 
 ```
 ## To run react native app in android device (client-side)
